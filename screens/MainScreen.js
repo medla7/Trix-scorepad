@@ -14,25 +14,14 @@ export default function MainScreen({
   setCurrentChooserIndex,
 }) {
   const handleGamePress = (key) => {
-    if (key === "king") {
-      navigation.navigate("KingOfHeartsScreen", {
-        onCancel: () => navigation.goBack(),
-        onScoreSaved: (winnerIndex) => {
-          const updated = [...scores];
-          const isChooser = winnerIndex === currentChooserIndex;
-          updated[winnerIndex] += isChooser ? 200 : 100;
-          setScores(updated);
+  if (key === "king") {
+    navigation.navigate("KingOfHeartsScreen");
+  } else if (key === "last") {
+    navigation.navigate("LastFoldScreen");
+  }
+  // ... les autres jeux
+};
 
-          const newGames = games.map((g) =>
-            g.key === "king" ? { ...g, played: true } : g
-          );
-          setGames(newGames);
-          setCurrentChooserIndex((currentChooserIndex + 1) % players.length);
-          navigation.navigate("MainScreen");
-        },
-      });
-    }
-  };
 
   return (
     <View style={styles.container}>

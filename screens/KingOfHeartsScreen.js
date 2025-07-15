@@ -1,14 +1,24 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { COLORS, FONTS, RADIUS, SPACING } from '../styles/theme';
+import React, { useState } from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { COLORS, FONTS, RADIUS, SPACING } from "../styles/theme";
+import { handleKingOfHearts } from "../games/kingOfHearts";
 
-export default function KingOfHeartsScreen({ navigation, players, onScoreSaved }) {
+export default function KingOfHeartsScreen({
+  navigation,
+  players,
+  onScoreSaved,
+}) {
   const [selectedPlayerIndex, setSelectedPlayerIndex] = useState(null);
 
   const handleSelect = (index) => {
     setSelectedPlayerIndex(index);
   };
-
+  const updatedScores = handleKingOfHearts(
+    scores,
+    selectedPlayer,
+    chooserIndex
+  );
+  setScores(updatedScores);
   const handleNext = () => {
     if (selectedPlayerIndex !== null) {
       onScoreSaved(selectedPlayerIndex);
@@ -47,9 +57,10 @@ export default function KingOfHeartsScreen({ navigation, players, onScoreSaved }
       </View>
 
       <Text style={styles.rules}>
-        NB: players can’t play any heart card in the first of any round until someone do it
-        in the next play. Can’t play the king of hearts until there is a fold containing a
-        heart card. Who will get the king will receive 100 points.
+        NB: players can’t play any heart card in the first of any round until
+        someone do it in the next play. Can’t play the king of hearts until
+        there is a fold containing a heart card. Who will get the king will
+        receive 100 points.
       </Text>
 
       <View style={styles.actions}>
@@ -76,61 +87,61 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.background,
     padding: SPACING.md,
-    justifyContent: 'flex-start',
+    justifyContent: "flex-start",
   },
   title: {
     fontSize: 70,
-    fontFamily: 'JotiOne',
+    fontFamily: "JotiOne",
     color: COLORS.primary,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: SPACING.md,
     paddingTop: 40,
   },
   subtitle: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: FONTS.large,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: SPACING.md,
     color: COLORS.primary,
   },
   scoreBox: {
-    backgroundColor: '#D7C6B4',
+    backgroundColor: "#D7C6B4",
     padding: SPACING.md,
     borderRadius: RADIUS.md,
     marginBottom: SPACING.md,
   },
   question: {
     fontSize: FONTS.normal,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     marginBottom: 10,
   },
   buttonsRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
   },
   playerButton: {
-    backgroundColor: '#A85903',
+    backgroundColor: "#A85903",
     borderRadius: RADIUS.md,
     paddingVertical: 12,
     paddingHorizontal: 20,
     marginVertical: 5,
-    width: '48%',
-    alignItems: 'center',
+    width: "48%",
+    alignItems: "center",
   },
   playerButtonSelected: {
     backgroundColor: COLORS.background,
-    borderColor: '#A85903',
+    borderColor: "#A85903",
     borderWidth: 2,
   },
   playerText: {
     color: COLORS.background,
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   playerTextSelected: {
-    color: '#A85903',
+    color: "#A85903",
   },
   rules: {
     fontSize: 13,
@@ -138,19 +149,19 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   actions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 'auto',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: "auto",
   },
   actionButton: {
-    width: '48%',
+    width: "48%",
     padding: 16,
     borderRadius: RADIUS.lg,
-    alignItems: 'center',
+    alignItems: "center",
   },
   actionText: {
     color: COLORS.background,
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });

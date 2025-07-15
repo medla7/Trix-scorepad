@@ -10,6 +10,8 @@ import { useFonts } from "expo-font";
 import { JotiOne_400Regular } from "@expo-google-fonts/joti-one";
 import { handleKingOfHearts } from "./games/kingOfHearts";
 import { updateGamesList, updateChooserIfNeeded } from "./logic/gameFlow";
+import LastFoldScreen from "./screens/LastFoldScreen";
+import { handleLastFold } from "./games/lastFold";
 
 const Stack = createNativeStackNavigator();
 
@@ -78,11 +80,10 @@ export default function App() {
               setScores={setScores}
               chooserIndex={currentChooserIndex}
               onScoreSaved={(selectedPlayerIndex) => {
-                const updatedScores = applyScore(
+                const updatedScores = handleKingOfHearts(
                   scores,
                   selectedPlayerIndex,
-                  currentChooserIndex,
-                  100
+                  currentChooserIndex
                 );
                 setScores(updatedScores);
 
@@ -104,6 +105,50 @@ export default function App() {
                   setChooserGamesPlayed,
                   players
                 );
+
+                props.navigation.navigate("MainScreen");
+              }}
+            />
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen name="LastFoldScreen">
+          {(props) => (
+            <LastFoldScreen
+              {...props}
+              players={players}
+              scores={scores}
+              setScores={setScores}
+              chooserIndex={currentChooserIndex}
+              onScoreSaved={(selectedPlayerIndex) => {
+                const updatedScores = handleLastFold(
+                  scores,
+                  selectedPlayerIndex,
+                  currentChooserIndex
+                );
+                setScores(updatedScores);
+
+                const updatedGames = games.map((g) =>
+                  g.key === "last" ? { ...g, played: true } : g
+                );
+                setGames(updatedGames);
+
+                const newTotal = totalGamesPlayed + 1;
+                const newChooserCount = chooserGamesPlayed + 1;
+
+                setTotalGamesPlayed(newTotal);
+                setChooserGamesPlayed(newChooserCount);
+
+                if (newChooserCount === 10) {
+                  const nextChooser =
+                    (currentChooserIndex + 1) % players.length;
+                  setCurrentChooserIndex(nextChooser);
+                  setChooserGamesPlayed(0);
+                }
+
+                if (newTotal === 40) {
+                  Alert.alert("Game Over", "All 40 games have been played!");
+                }
 
                 props.navigation.navigate("MainScreen");
               }}
