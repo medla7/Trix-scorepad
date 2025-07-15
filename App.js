@@ -8,16 +8,10 @@ import MainScreen from "./screens/MainScreen";
 import KingOfHeartsScreen from "./screens/KingOfHeartsScreen";
 import { useFonts } from "expo-font";
 import { JotiOne_400Regular } from "@expo-google-fonts/joti-one";
+import { handleKingOfHearts } from "./games/kingOfHearts";
+import { updateGamesList, updateChooserIfNeeded } from "./logic/gameFlow";
 
 const Stack = createNativeStackNavigator();
-
-// ✅ General scoring rule: apply double score if player is chooser
-const applyScore = (scores, selectedPlayerIndex, chooserIndex, basePoints) => {
-  const updated = [...scores];
-  const isChooser = selectedPlayerIndex === chooserIndex;
-  updated[selectedPlayerIndex] += isChooser ? basePoints * 2 : basePoints;
-  return updated;
-};
 
 export default function App() {
   const [chooserGamesPlayed, setChooserGamesPlayed] = useState(0);
@@ -92,27 +86,24 @@ export default function App() {
                 );
                 setScores(updatedScores);
 
-                const updatedGames = games.map((g) =>
-                  g.key === "king" ? { ...g, played: true } : g
-                );
+                const updatedGames = updateGamesList(games, "king");
                 setGames(updatedGames);
 
-                const newTotal = totalGamesPlayed + 1;
-                const newChooserCount = chooserGamesPlayed + 1;
+                setTotalGamesPlayed((prev) => {
+                  const total = prev + 1;
+                  if (total === 40) {
+                    Alert.alert("Game Over", "All 40 games have been played!");
+                  }
+                  return total;
+                });
 
-                setTotalGamesPlayed(newTotal);
-                setChooserGamesPlayed(newChooserCount);
-
-                if (newChooserCount === 10) {
-                  const nextChooser =
-                    (currentChooserIndex + 1) % players.length;
-                  setCurrentChooserIndex(nextChooser);
-                  setChooserGamesPlayed(0);
-                }
-
-                if (newTotal === 40) {
-                  Alert.alert("Game Over", "All 40 games have been played!");
-                }
+                updateChooserIfNeeded(
+                  currentChooserIndex,
+                  chooserGamesPlayed,
+                  setCurrentChooserIndex,
+                  setChooserGamesPlayed,
+                  players
+                );
 
                 props.navigation.navigate("MainScreen");
               }}
