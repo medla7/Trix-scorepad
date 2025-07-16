@@ -1,7 +1,7 @@
 // screens/LastFoldScreen.js
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { COLORS, FONTS, RADIUS, SPACING } from '../styles/theme';
+import React, { useState } from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { COLORS, FONTS, RADIUS, SPACING } from "../styles/theme";
 
 export default function LastFoldScreen({
   players,
@@ -19,44 +19,41 @@ export default function LastFoldScreen({
 
   const handleNext = () => {
     if (selectedPlayerIndex === null) {
-      Alert.alert('Selection Required', 'Please select a player.');
+      Alert.alert("Selection Required", "Please select a player.");
       return;
     }
     onScoreSaved(selectedPlayerIndex); // Le score sera appliqué dans App.js
   };
 
   const handleCancel = () => {
-    navigation.navigate('MainScreen');
+    navigation.navigate("MainScreen");
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Last Fold</Text>
+      <View style={styles.scoreBox}>
       <Text style={styles.subtitle}>Who got the last fold?</Text>
 
-      {players.map((player, index) => {
-        const isSelected = selectedPlayerIndex === index;
-        return (
-          <TouchableOpacity
-            key={index}
-            onPress={() => handleSelect(index)}
-            style={[
-              styles.playerButton,
-              isSelected && styles.selectedButton,
-            ]}
-          >
-            <Text
-              style={[
-                styles.playerText,
-                isSelected && styles.selectedText,
-              ]}
+      <View style={styles.buttonsRow}>
+        {players.map((player, index) => {
+          const isSelected = selectedPlayerIndex === index;
+          return (
+            <TouchableOpacity
+              key={index}
+              onPress={() => handleSelect(index)}
+              style={[styles.playerButton, isSelected && styles.selectedButton]}
             >
-              {player}
-            </Text>
-          </TouchableOpacity>
-        );
-      })}
-
+              <Text
+                style={[styles.playerText, isSelected && styles.selectedText]}
+              >
+                {player}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+      </View>
       <View style={styles.actions}>
         <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
           <Text style={styles.cancelText}>Cancel</Text>
@@ -75,17 +72,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.background,
     padding: SPACING.md,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
   title: {
-    fontFamily: 'JotiOne',
+    fontFamily: "JotiOne",
     fontSize: 56,
     color: COLORS.primary,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 20,
   },
   subtitle: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: FONTS.medium,
     marginBottom: 20,
   },
@@ -94,7 +91,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginVertical: 8,
     borderRadius: RADIUS.md,
-    alignItems: 'center',
+    alignItems: "center",
   },
   selectedButton: {
     backgroundColor: COLORS.background,
@@ -104,36 +101,42 @@ const styles = StyleSheet.create({
   playerText: {
     color: COLORS.background,
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   selectedText: {
     color: COLORS.primary,
   },
   actions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 30,
   },
   cancelButton: {
     backgroundColor: COLORS.gray,
     padding: 12,
     borderRadius: RADIUS.md,
-    width: '48%',
-    alignItems: 'center',
+    width: "48%",
+    alignItems: "center",
   },
   cancelText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: "#fff",
+    fontWeight: "bold",
   },
   nextButton: {
     backgroundColor: COLORS.primary,
     padding: 12,
     borderRadius: RADIUS.md,
-    width: '48%',
-    alignItems: 'center',
+    width: "48%",
+    alignItems: "center",
   },
   nextText: {
     color: COLORS.background,
-    fontWeight: 'bold',
+    fontWeight: "bold",
+  },
+  scoreBox: {
+    backgroundColor: '#D7C6B4',
+    padding: SPACING.md,
+    borderRadius: RADIUS.md,
+    marginBottom: SPACING.md,
   },
 });

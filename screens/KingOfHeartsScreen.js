@@ -26,8 +26,8 @@ export default function KingOfHeartsScreen({ navigation, players, onScoreSaved }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>TRIX</Text>
-      <Text style={styles.subtitle}>king of hearts</Text>
+      <Text style={styles.title}>king of hearts</Text>
+      
 
       <View style={styles.scoreBox}>
         <Text style={styles.question}>who got the king?</Text>

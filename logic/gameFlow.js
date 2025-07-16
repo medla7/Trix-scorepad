@@ -1,25 +1,26 @@
-// logic/gameFlow.js
-
-export const updateGamesList = (games, gameKey) => {
-  return games.map((g) =>
-    g.key === gameKey ? { ...g, played: true } : g
-  );
-};
-
-export const updateChooserIfNeeded = (
-  chooserIndex,
+export function updateGameFlow({
+  totalGamesPlayed,
   chooserGamesPlayed,
-  setChooserIndex,
-  setChooserGamesPlayed,
-  players
-) => {
-  const updated = chooserGamesPlayed + 1;
+  currentChooserIndex,
+  playersLength,
+}) {
+  const newTotal = totalGamesPlayed + 1;
+  const newChooserCount = chooserGamesPlayed + 1;
 
-  if (updated >= 10) {
-    const nextChooser = (chooserIndex + 1) % players.length;
-    setChooserIndex(nextChooser);
-    setChooserGamesPlayed(0);
-  } else {
-    setChooserGamesPlayed(updated);
+  let nextChooserIndex = currentChooserIndex;
+  let resetChooserGamesPlayed = newChooserCount;
+
+  if (newChooserCount === 10) {
+    nextChooserIndex = (currentChooserIndex + 1) % playersLength;
+    resetChooserGamesPlayed = 0;
   }
-};
+
+  const gameOver = newTotal === 40;
+
+  return {
+    newTotal,
+    newChooserCount: resetChooserGamesPlayed,
+    nextChooserIndex,
+    gameOver,
+  };
+}

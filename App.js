@@ -9,7 +9,9 @@ import KingOfHeartsScreen from "./screens/KingOfHeartsScreen";
 import { useFonts } from "expo-font";
 import { JotiOne_400Regular } from "@expo-google-fonts/joti-one";
 import { handleKingOfHearts } from "./games/kingOfHearts";
-import { updateGamesList, updateChooserIfNeeded } from "./logic/gameFlow";
+import { applyScoring } from "./logic/scoring";
+import { updateGameFlow } from "./logic/gameFlow";
+
 import LastFoldScreen from "./screens/LastFoldScreen";
 import { handleLastFold } from "./games/lastFold";
 
@@ -72,45 +74,49 @@ export default function App() {
         </Stack.Screen>
 
         <Stack.Screen name="KingOfHeartsScreen">
-          {(props) => (
-            <KingOfHeartsScreen
-              {...props}
-              players={players}
-              scores={scores}
-              setScores={setScores}
-              chooserIndex={currentChooserIndex}
-              onScoreSaved={(selectedPlayerIndex) => {
-                const updatedScores = handleKingOfHearts(
-                  scores,
-                  selectedPlayerIndex,
-                  currentChooserIndex
-                );
-                setScores(updatedScores);
+  {(props) => (
+    <KingOfHeartsScreen
+      {...props}
+      players={players}
+      scores={scores}
+      setScores={setScores}
+      chooserIndex={currentChooserIndex}
+      onScoreSaved={(selectedPlayerIndex) => {
+        // 1. Appliquer le score via ta logique
+        const updated = handleKingOfHearts(
+          scores,
+          selectedPlayerIndex,
+          currentChooserIndex
+        );
+        setScores(updated);
 
-                const updatedGames = updateGamesList(games, "king");
-                setGames(updatedGames);
+        // 2. Marquer le jeu comme joué
+        const updatedGames = games.map((g) =>
+          g.key === "king" ? { ...g, played: true } : g
+        );
+        setGames(updatedGames);
 
-                setTotalGamesPlayed((prev) => {
-                  const total = prev + 1;
-                  if (total === 40) {
-                    Alert.alert("Game Over", "All 40 games have been played!");
-                  }
-                  return total;
-                });
+        // 3. Gérer le changement de joueur
+        const result = updateGameFlow({
+          totalGamesPlayed,
+          chooserGamesPlayed,
+          currentChooserIndex,
+          playersLength: players.length,
+        });
+        setTotalGamesPlayed(result.newTotal);
+        setChooserGamesPlayed(result.newChooserCount);
+        setCurrentChooserIndex(result.nextChooserIndex);
 
-                updateChooserIfNeeded(
-                  currentChooserIndex,
-                  chooserGamesPlayed,
-                  setCurrentChooserIndex,
-                  setChooserGamesPlayed,
-                  players
-                );
+        if (result.gameOver) {
+          Alert.alert("Game Over", "All 40 games have been played!");
+        }
 
-                props.navigation.navigate("MainScreen");
-              }}
-            />
-          )}
-        </Stack.Screen>
+        props.navigation.navigate("MainScreen");
+      }}
+    />
+  )}
+</Stack.Screen>
+
 
         <Stack.Screen name="LastFoldScreen">
           {(props) => (
