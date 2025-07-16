@@ -19,6 +19,9 @@ export default function MainScreen({
   } else if (key === "last") {
     navigation.navigate("LastFoldScreen");
   }
+   else if (key === "51") {
+    navigation.navigate("51Screen");
+  }
   // ... les autres jeux
 };
 

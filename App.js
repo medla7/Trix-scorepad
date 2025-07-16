@@ -12,6 +12,8 @@ import { JotiOne_400Regular } from "@expo-google-fonts/joti-one";
 import { handleKingOfHearts } from "./games/kingOfHearts";
 import { handleLastFold } from "./games/lastFold";
 import { updateGameFlow } from "./logic/gameFlow";
+import FiftyOneScreen from "./screens/51Screen";
+import { handleFiftyOne } from "./games/51";
 
 const Stack = createNativeStackNavigator();
 
@@ -124,6 +126,24 @@ export default function App() {
                   currentChooserIndex
                 );
                 handleGameCompletion("last", updated);
+                props.navigation.navigate("MainScreen");
+              }}
+            />
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen name="51Screen">
+          {(props) => (
+            <FiftyOneScreen
+              {...props}
+              players={players}
+              onScoreSaved={(selectedPlayerIndex) => {
+                const updated = handle51(
+                  scores,
+                  selectedPlayerIndex,
+                  currentChooserIndex
+                );
+                handleGameCompletion("51", updated);
                 props.navigation.navigate("MainScreen");
               }}
             />
