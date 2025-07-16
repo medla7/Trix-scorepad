@@ -22,6 +22,9 @@ export default function MainScreen({
    else if (key === "51") {
     navigation.navigate("51Screen");
   }
+   else if (key === "queens") {
+    navigation.navigate("QueensScreen");
+  }
   // ... les autres jeux
 };
 

@@ -13,7 +13,9 @@ import { handleKingOfHearts } from "./games/kingOfHearts";
 import { handleLastFold } from "./games/lastFold";
 import { updateGameFlow } from "./logic/gameFlow";
 import FiftyOneScreen from "./screens/51Screen";
-import { handleFiftyOne } from "./games/51";
+import { handle51 } from "./games/51";
+import { handleQueens } from "./games/queens";
+import QueensScreen from "./screens/QueensScreen"; // à créer
 
 const Stack = createNativeStackNavigator();
 
@@ -144,6 +146,24 @@ export default function App() {
                   currentChooserIndex
                 );
                 handleGameCompletion("51", updated);
+                props.navigation.navigate("MainScreen");
+              }}
+            />
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen name="QueensScreen">
+          {(props) => (
+            <QueensScreen
+              {...props}
+              players={players}
+              onScoreSaved={(selectedIndexes) => {
+                const updated = handleQueens(
+                  scores,
+                  selectedIndexes,
+                  currentChooserIndex
+                );
+                handleGameCompletion("queens", updated);
                 props.navigation.navigate("MainScreen");
               }}
             />
