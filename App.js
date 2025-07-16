@@ -6,14 +6,12 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import PlayerSetupScreen from "./screens/PlayerSetupScreen";
 import MainScreen from "./screens/MainScreen";
 import KingOfHeartsScreen from "./screens/KingOfHeartsScreen";
+import LastFoldScreen from "./screens/LastFoldScreen";
 import { useFonts } from "expo-font";
 import { JotiOne_400Regular } from "@expo-google-fonts/joti-one";
 import { handleKingOfHearts } from "./games/kingOfHearts";
-import { applyScoring } from "./logic/scoring";
-import { updateGameFlow } from "./logic/gameFlow";
-
-import LastFoldScreen from "./screens/LastFoldScreen";
 import { handleLastFold } from "./games/lastFold";
+import { updateGameFlow } from "./logic/gameFlow";
 
 const Stack = createNativeStackNavigator();
 
@@ -51,6 +49,29 @@ export default function App() {
     );
   }
 
+  const handleGameCompletion = (gameKey, updatedScores) => {
+    setScores(updatedScores);
+
+    const updatedGames = games.map((g) =>
+      g.key === gameKey ? { ...g, played: true } : g
+    );
+    setGames(updatedGames);
+
+    const result = updateGameFlow({
+      totalGamesPlayed,
+      chooserGamesPlayed,
+      currentChooserIndex,
+      playersLength: players.length,
+    });
+    setTotalGamesPlayed(result.newTotal);
+    setChooserGamesPlayed(result.newChooserCount);
+    setCurrentChooserIndex(result.nextChooserIndex);
+
+    if (result.gameOver) {
+      Alert.alert("Game Over", "All 40 games have been played!");
+    }
+  };
+
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -74,88 +95,35 @@ export default function App() {
         </Stack.Screen>
 
         <Stack.Screen name="KingOfHeartsScreen">
-  {(props) => (
-    <KingOfHeartsScreen
-      {...props}
-      players={players}
-      scores={scores}
-      setScores={setScores}
-      chooserIndex={currentChooserIndex}
-      onScoreSaved={(selectedPlayerIndex) => {
-        // 1. Appliquer le score via ta logique
-        const updated = handleKingOfHearts(
-          scores,
-          selectedPlayerIndex,
-          currentChooserIndex
-        );
-        setScores(updated);
-
-        // 2. Marquer le jeu comme joué
-        const updatedGames = games.map((g) =>
-          g.key === "king" ? { ...g, played: true } : g
-        );
-        setGames(updatedGames);
-
-        // 3. Gérer le changement de joueur
-        const result = updateGameFlow({
-          totalGamesPlayed,
-          chooserGamesPlayed,
-          currentChooserIndex,
-          playersLength: players.length,
-        });
-        setTotalGamesPlayed(result.newTotal);
-        setChooserGamesPlayed(result.newChooserCount);
-        setCurrentChooserIndex(result.nextChooserIndex);
-
-        if (result.gameOver) {
-          Alert.alert("Game Over", "All 40 games have been played!");
-        }
-
-        props.navigation.navigate("MainScreen");
-      }}
-    />
-  )}
-</Stack.Screen>
-
+          {(props) => (
+            <KingOfHeartsScreen
+              {...props}
+              players={players}
+              onScoreSaved={(selectedPlayerIndex) => {
+                const updated = handleKingOfHearts(
+                  scores,
+                  selectedPlayerIndex,
+                  currentChooserIndex
+                );
+                handleGameCompletion("king", updated);
+                props.navigation.navigate("MainScreen");
+              }}
+            />
+          )}
+        </Stack.Screen>
 
         <Stack.Screen name="LastFoldScreen">
           {(props) => (
             <LastFoldScreen
               {...props}
               players={players}
-              scores={scores}
-              setScores={setScores}
-              chooserIndex={currentChooserIndex}
               onScoreSaved={(selectedPlayerIndex) => {
-                const updatedScores = handleLastFold(
+                const updated = handleLastFold(
                   scores,
                   selectedPlayerIndex,
                   currentChooserIndex
                 );
-                setScores(updatedScores);
-
-                const updatedGames = games.map((g) =>
-                  g.key === "last" ? { ...g, played: true } : g
-                );
-                setGames(updatedGames);
-
-                const newTotal = totalGamesPlayed + 1;
-                const newChooserCount = chooserGamesPlayed + 1;
-
-                setTotalGamesPlayed(newTotal);
-                setChooserGamesPlayed(newChooserCount);
-
-                if (newChooserCount === 10) {
-                  const nextChooser =
-                    (currentChooserIndex + 1) % players.length;
-                  setCurrentChooserIndex(nextChooser);
-                  setChooserGamesPlayed(0);
-                }
-
-                if (newTotal === 40) {
-                  Alert.alert("Game Over", "All 40 games have been played!");
-                }
-
+                handleGameCompletion("last", updated);
                 props.navigation.navigate("MainScreen");
               }}
             />

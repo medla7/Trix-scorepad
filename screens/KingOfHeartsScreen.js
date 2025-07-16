@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { COLORS, FONTS, RADIUS, SPACING } from '../styles/theme';
-import { handleKingOfHearts } from '../games/kingOfHearts';
 
 export default function KingOfHeartsScreen({ navigation, players, onScoreSaved }) {
   const [selectedPlayerIndex, setSelectedPlayerIndex] = useState(null);
@@ -9,25 +8,16 @@ export default function KingOfHeartsScreen({ navigation, players, onScoreSaved }
   const handleSelect = (index) => {
     setSelectedPlayerIndex(index);
   };
-  
+
   const handleNext = () => {
-  if (selectedPlayerIndex !== null) {
-    const updatedScores = handleKingOfHearts(
-      scores,
-      selectedPlayerIndex,
-      chooserIndex
-    );
-    setScores(updatedScores);
-
-    onScoreSaved(selectedPlayerIndex);
-  }
-};
-
+    if (selectedPlayerIndex !== null) {
+      onScoreSaved(selectedPlayerIndex);
+    }
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>king of hearts</Text>
-      
 
       <View style={styles.scoreBox}>
         <Text style={styles.question}>who got the king?</Text>
@@ -94,13 +84,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: SPACING.md,
     paddingTop: 40,
-  },
-  subtitle: {
-    textAlign: 'center',
-    fontSize: FONTS.large,
-    fontWeight: 'bold',
-    marginBottom: SPACING.md,
-    color: COLORS.primary,
   },
   scoreBox: {
     backgroundColor: '#D7C6B4',
