@@ -42,23 +42,25 @@ export default function QueensScreen({ navigation, players, onScoreSaved }) {
       <Text style={styles.title}>queens</Text>
       <View style={styles.scoreBox}>
         <Text style={styles.question}>who got the king?</Text>
-        <View style={styles.buttonsRow}>
+        <View style={styles.playersRow}>
           {players.map((player, index) => (
             <View key={index} style={styles.playerCol}>
-              <TouchableOpacity
-                style={styles.circleBtn}
-                onPress={() => handleDecrement(index)}
-              >
-                <Text style={styles.circleText}>-</Text>
-              </TouchableOpacity>
-              <Text style={styles.playerScore}>{queenPoints[index]}</Text>
-              <TouchableOpacity
-                style={styles.circleBtn}
-                onPress={() => handleIncrement(index)}
-              >
-                <Text style={styles.circleText}>+</Text>
-              </TouchableOpacity>
               <Text style={styles.playerName}>{player}</Text>
+              <View style={styles.btnRow}>
+                <TouchableOpacity
+                  style={styles.circleBtn}
+                  onPress={() => handleDecrement(index)}
+                >
+                  <Text style={styles.circleText}>-</Text>
+                </TouchableOpacity>
+                <Text style={styles.playerScore}>{queenPoints[index]}</Text>
+                <TouchableOpacity
+                  style={styles.circleBtn}
+                  onPress={() => handleIncrement(index)}
+                >
+                  <Text style={styles.circleText}>+</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           ))}
         </View>
@@ -114,14 +116,27 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 10,
   },
-  buttonsRow: {
+  playersRow: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-around",
+    gap: 8,
   },
   playerCol: {
     alignItems: "center",
     marginHorizontal: 10,
+    marginVertical: 8,
+  },
+  playerName: {
+    color: COLORS.primary,
+    fontWeight: "bold",
+    fontSize: 16,
+    marginBottom: 8,
+  },
+  btnRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
   },
   circleBtn: {
     backgroundColor: "#A85903",
@@ -139,12 +154,8 @@ const styles = StyleSheet.create({
   playerScore: {
     fontSize: 18,
     fontWeight: "bold",
-    marginVertical: 4,
-  },
-  playerName: {
-    color: COLORS.primary,
-    fontWeight: "bold",
-    marginTop: 4,
+    color: "#000",
+    marginHorizontal: 6,
   },
   rules: {
     fontSize: 13,
