@@ -16,6 +16,10 @@ import FiftyOneScreen from "./screens/51Screen";
 import { handle51 } from "./games/51";
 import { handleQueens } from "./games/queens";
 import QueensScreen from "./screens/QueensScreen"; // à créer
+import DimandsScreen from "./screens/DimandsScreen";
+import { handleDimands } from "./games/dimands";
+import FoldsScreen from "./screens/FoldsScreen";
+import { handleFolds } from "./games/folds";
 
 const Stack = createNativeStackNavigator();
 
@@ -164,6 +168,41 @@ export default function App() {
                   currentChooserIndex
                 );
                 handleGameCompletion("queens", updated);
+                props.navigation.navigate("MainScreen");
+              }}
+            />
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen name="DimandsScreen">
+          {(props) => (
+            <DimandsScreen
+              {...props}
+              players={players}
+              onScoreSaved={(selectedIndexes) => {
+                const updated = handleDimands(
+                  scores,
+                  selectedIndexes,
+                  currentChooserIndex
+                );
+                handleGameCompletion("dimands", updated);
+                props.navigation.navigate("MainScreen");
+              }}
+            />
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="FoldsScreen">
+          {(props) => (
+            <FoldsScreen
+              {...props}
+              players={players}
+              onScoreSaved={(foldPoints) => {
+                const updated = handleFolds(
+                  scores,
+                  foldPoints,
+                  currentChooserIndex
+                );
+                handleGameCompletion("folds", updated);
                 props.navigation.navigate("MainScreen");
               }}
             />

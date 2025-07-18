@@ -25,6 +25,15 @@ export default function MainScreen({
    else if (key === "queens") {
     navigation.navigate("QueensScreen");
   }
+   else if (key === "dimands") {
+    navigation.navigate("DimandsScreen");
+  }
+   else if (key === "folds") {
+    navigation.navigate("FoldsScreen");
+  }
+   else if (key === "general") {
+    navigation.navigate("GeneraleScreen");
+  }
   // ... les autres jeux
 };
 

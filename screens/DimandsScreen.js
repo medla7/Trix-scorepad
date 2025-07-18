@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { COLORS, FONTS, RADIUS, SPACING } from "../styles/theme";
 
-export default function QueensScreen({ navigation, players, onScoreSaved }) {
-  const [queenPoints, setQueenPoints] = useState([0, 0, 0, 0]);
+export default function DiamondsScreen({ navigation, players, onScoreSaved }) {
+  const [diamondsPoints, setDiamondsPoints] = useState([0, 0, 0, 0]);
 
   const handleChange = (index, delta) => {
-    setQueenPoints((prev) => {
+    setDiamondsPoints((prev) => {
       const newPoints = [...prev];
       const total = newPoints.reduce((a, b) => a + b, 0);
       const updated = newPoints[index] + delta;
@@ -18,16 +18,18 @@ export default function QueensScreen({ navigation, players, onScoreSaved }) {
   };
 
   const handleNext = () => {
-    const total = queenPoints.reduce((sum, val) => sum + val, 0);
+    const total = diamondsPoints.reduce((a, b) => a + b, 0);
     if (total !== 80) {
-      alert("Total must be exactly 80 points");
+      alert("Total points must equal 80");
       return;
     }
 
     const selectedIndexes = [];
-    queenPoints.forEach((value, i) => {
-      const times = value / 20;
-      for (let j = 0; j < times; j++) selectedIndexes.push(i);
+    diamondsPoints.forEach((value, i) => {
+      const times = value / 10;
+      for (let j = 0; j < times; j++) {
+        selectedIndexes.push(i);
+      }
     });
 
     onScoreSaved(selectedIndexes);
@@ -35,10 +37,10 @@ export default function QueensScreen({ navigation, players, onScoreSaved }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>queens</Text>
+      <Text style={styles.title}>diamonds</Text>
 
       <View style={styles.scoreBox}>
-        <Text style={styles.question}>Distribute the 4 queens</Text>
+        <Text style={styles.question}>Distribute the 8 diamonds</Text>
 
         <View style={styles.playersBox}>
           <View style={styles.row}>
@@ -48,14 +50,16 @@ export default function QueensScreen({ navigation, players, onScoreSaved }) {
                 <View style={styles.scoreRow}>
                   <TouchableOpacity
                     style={styles.circleButton}
-                    onPress={() => handleChange(index, -20)}
+                    onPress={() => handleChange(index, -10)}
                   >
                     <Text style={styles.circleText}>-</Text>
                   </TouchableOpacity>
-                  <Text style={styles.scoreText}>{queenPoints[index]}</Text>
+                  <Text style={styles.scoreText}>
+                    {diamondsPoints[index]}
+                  </Text>
                   <TouchableOpacity
                     style={styles.circleButton}
-                    onPress={() => handleChange(index, 20)}
+                    onPress={() => handleChange(index, 10)}
                   >
                     <Text style={styles.circleText}>+</Text>
                   </TouchableOpacity>
@@ -71,16 +75,16 @@ export default function QueensScreen({ navigation, players, onScoreSaved }) {
                 <View style={styles.scoreRow}>
                   <TouchableOpacity
                     style={styles.circleButton}
-                    onPress={() => handleChange(index + 2, -20)}
+                    onPress={() => handleChange(index + 2, -10)}
                   >
                     <Text style={styles.circleText}>-</Text>
                   </TouchableOpacity>
                   <Text style={styles.scoreText}>
-                    {queenPoints[index + 2]}
+                    {diamondsPoints[index + 2]}
                   </Text>
                   <TouchableOpacity
                     style={styles.circleButton}
-                    onPress={() => handleChange(index + 2, 20)}
+                    onPress={() => handleChange(index + 2, 10)}
                   >
                     <Text style={styles.circleText}>+</Text>
                   </TouchableOpacity>
@@ -92,7 +96,7 @@ export default function QueensScreen({ navigation, players, onScoreSaved }) {
       </View>
 
       <Text style={styles.rules}>
-        NB: Each queen is worth 20 points. Total must be exactly 80.
+        NB: Each diamond is worth 10 points. Total must be exactly 80.
       </Text>
 
       <View style={styles.actions}>
