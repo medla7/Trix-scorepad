@@ -20,6 +20,8 @@ import DimandsScreen from "./screens/DimandsScreen";
 import { handleDimands } from "./games/dimands";
 import FoldsScreen from "./screens/FoldsScreen";
 import { handleFolds } from "./games/folds";
+import GeneraleScreen from "./screens/GeneraleScreen";
+import { handleGenerale } from "./games/generale";
 
 const Stack = createNativeStackNavigator();
 
@@ -204,6 +206,25 @@ export default function App() {
                 );
                 handleGameCompletion("folds", updated);
                 props.navigation.navigate("MainScreen");
+              }}
+            />
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="GeneraleScreen">
+          {(props) => (
+            <GeneraleScreen
+              {...props}
+              players={players}
+              onScoreSaved={(manualPoints) => {
+                const updated = handleGenerale(
+                  scores,
+                  manualPoints,
+                  currentChooserIndex
+                );
+                if (updated) {
+                  handleGameCompletion("generale", updated);
+                  props.navigation.navigate("MainScreen");
+                }
               }}
             />
           )}

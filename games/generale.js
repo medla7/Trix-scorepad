@@ -1,25 +1,27 @@
-// games/generale.js
-import { applyMultiScoring } from "../logic/scoring";
-
-export function handleGenerale(scores, selectedPlayersIndexes, chooserIndex) {
-  const total = scores.reduce((a, b) => a + b, 0);
-
+export function handleGenerale(currentScores, manualScores, chooserIndex) {
+  const total = manualScores.reduce((a, b) => a + b, 0);
   if (total !== 440) {
     alert("Total score must be exactly 440");
     return null;
   }
 
-  const onlyOneHasScore = scores.filter((s) => s > 0).length === 1;
-  const indexWith440 = scores.findIndex((s) => s === 440);
+  const indexWith440 = manualScores.findIndex((s) => s === 440);
+  const onlyOneHasScore = manualScores.filter((s) => s > 0).length === 1;
 
-  const finalScores = [...scores];
+  const updated = [...currentScores];
 
   if (onlyOneHasScore && indexWith440 !== -1) {
-    finalScores[indexWith440] = -440;
+    updated[indexWith440] += -440;
+    return updated;
   }
 
-  return applyMultiScoring({
-    scores: finalScores,
-    basePoints: 1, // chaque point est compté directement
-  });
+  // Sinon on ajoute les points, en doublant ceux du chooser
+  for (let i = 0; i < manualScores.length; i++) {
+    const earned = manualScores[i];
+    if (earned > 0) {
+      updated[i] += i === chooserIndex ? earned * 2 : earned;
+    }
+  }
+
+  return updated;
 }

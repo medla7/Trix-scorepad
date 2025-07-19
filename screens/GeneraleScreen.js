@@ -15,28 +15,22 @@ export default function GeneraleScreen({ navigation, players, onScoreSaved }) {
 
   const handleChange = (index, value) => {
     const newScores = [...scores];
-    newScores[index] = value.replace(/[^0-9]/g, ""); // Only allow digits
+    newScores[index] = value.replace(/[^0-9]/g, "");
     setScores(newScores);
   };
 
   const handleNext = () => {
-    const numericScores = scores.map((val) => parseInt(val || "0", 10));
-    const total = numericScores.reduce((sum, val) => sum + val, 0);
+  const numericScores = scores.map((val) => parseInt(val || "0", 10));
+  const total = numericScores.reduce((sum, val) => sum + val, 0);
 
-    if (total !== 440) {
-      alert("Total score must equal 440");
-      return;
-    }
+  if (total !== 440) {
+    alert("Total score must equal 440");
+    return;
+  }
 
-    const onlyOnePlayerHasAll = numericScores.filter((v) => v > 0).length === 1;
-    const indexWith440 = numericScores.findIndex((v) => v === 440);
+  onScoreSaved(numericScores);
+};
 
-    if (onlyOnePlayerHasAll && indexWith440 !== -1) {
-      numericScores[indexWith440] = -440;
-    }
-
-    onScoreSaved(numericScores);
-  };
 
   return (
     <KeyboardAvoidingView
@@ -77,7 +71,8 @@ export default function GeneraleScreen({ navigation, players, onScoreSaved }) {
 
       <Text style={styles.rules}>
         NB: For each point in generale the player gets manual score. Total must
-        be 440. If one player gets all, he receives -440.
+        be 440. If one player gets all, he receives -440. The chooser always
+        receives double.
       </Text>
 
       <View style={styles.actions}>
