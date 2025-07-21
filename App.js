@@ -22,6 +22,8 @@ import FoldsScreen from "./screens/FoldsScreen";
 import { handleFolds } from "./games/folds";
 import GeneraleScreen from "./screens/GeneraleScreen";
 import { handleGenerale } from "./games/generale";
+import TrixScreen from "./screens/TrixScreen";
+import { handleTrix } from "./games/trix";
 
 const Stack = createNativeStackNavigator();
 
@@ -225,6 +227,23 @@ export default function App() {
                   handleGameCompletion("generale", updated);
                   props.navigation.navigate("MainScreen");
                 }
+              }}
+            />
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="TrixScreen">
+          {(props) => (
+            <TrixScreen
+              {...props}
+              players={players}
+              onScoreSaved={(selectedIndexes) => {
+                const updated = handleTrix(
+                  scores,
+                  selectedIndexes,
+                  currentChooserIndex
+                );
+                handleGameCompletion("trix", updated);
+                props.navigation.navigate("MainScreen");
               }}
             />
           )}

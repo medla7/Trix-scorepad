@@ -34,6 +34,9 @@ export default function MainScreen({
    else if (key === "general") {
     navigation.navigate("GeneraleScreen");
   }
+   else if (key === "trix") {
+    navigation.navigate("TrixScreen");
+  }
   // ... les autres jeux
 };
 
