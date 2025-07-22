@@ -13,6 +13,9 @@ export default function KingOfHeartsScreen({ navigation, players, onScoreSaved }
     if (selectedPlayerIndex !== null) {
       onScoreSaved(selectedPlayerIndex);
     }
+    else {
+      alert("Please select a player");
+    }
   };
 
   return (

@@ -1,7 +1,7 @@
 // screens/MainScreen.js
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { COLORS, FONTS, RADIUS, SPACING } from '../styles/theme';
+import { COLORS, FONTS, RADIUS, SPACING } from "../styles/theme";
 
 export default function MainScreen({
   navigation,
@@ -14,32 +14,27 @@ export default function MainScreen({
   setCurrentChooserIndex,
 }) {
   const handleGamePress = (key) => {
-  if (key === "king") {
-    navigation.navigate("KingOfHeartsScreen");
-  } else if (key === "last") {
-    navigation.navigate("LastFoldScreen");
-  }
-   else if (key === "51") {
-    navigation.navigate("51Screen");
-  }
-   else if (key === "queens") {
-    navigation.navigate("QueensScreen");
-  }
-   else if (key === "dimands") {
-    navigation.navigate("DimandsScreen");
-  }
-   else if (key === "folds") {
-    navigation.navigate("FoldsScreen");
-  }
-   else if (key === "general") {
-    navigation.navigate("GeneraleScreen");
-  }
-   else if (key === "trix") {
-    navigation.navigate("TrixScreen");
-  }
-  // ... les autres jeux
-};
-
+    if (key === "king") {
+      navigation.navigate("KingOfHeartsScreen");
+    } else if (key === "last") {
+      navigation.navigate("LastFoldScreen");
+    } else if (key === "51") {
+      navigation.navigate("51Screen");
+    } else if (key === "queens") {
+      navigation.navigate("QueensScreen");
+    } else if (key === "dimands") {
+      navigation.navigate("DimandsScreen");
+    } else if (key === "folds") {
+      navigation.navigate("FoldsScreen");
+    } else if (key === "general") {
+      navigation.navigate("GeneraleScreen");
+    } else if (key === "trix") {
+      navigation.navigate("TrixScreen");
+    } else if (key === "star") {
+      navigation.navigate("StarScreen");
+    }
+    // ... les autres jeux
+  };
 
   return (
     <View style={styles.container}>
@@ -56,7 +51,10 @@ export default function MainScreen({
         </View>
       </View>
 
-      <Text style={styles.subtitle}> {players[currentChooserIndex]} choose the game to play</Text>
+      <Text style={styles.subtitle}>
+        {" "}
+        {players[currentChooserIndex]} choose the game to play
+      </Text>
       <View style={styles.grid}>
         {games.map((game) => (
           <TouchableOpacity

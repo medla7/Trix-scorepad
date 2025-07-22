@@ -24,6 +24,7 @@ import GeneraleScreen from "./screens/GeneraleScreen";
 import { handleGenerale } from "./games/generale";
 import TrixScreen from "./screens/TrixScreen";
 import { handleTrix } from "./games/trix";
+import StarScreen from "./screens/StarScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -107,21 +108,32 @@ export default function App() {
         </Stack.Screen>
 
         <Stack.Screen name="KingOfHeartsScreen">
-          {(props) => (
-            <KingOfHeartsScreen
-              {...props}
-              players={players}
-              onScoreSaved={(selectedPlayerIndex) => {
-                const updated = handleKingOfHearts(
-                  scores,
-                  selectedPlayerIndex,
-                  currentChooserIndex
-                );
-                handleGameCompletion("king", updated);
-                props.navigation.navigate("MainScreen");
-              }}
-            />
-          )}
+          {(props) => {
+            const isStarRound = props.route.params?.isStarRound || false;
+            const fromStar = props.route.params?.fromStar || false;
+
+            return (
+              <KingOfHeartsScreen
+                {...props}
+                players={players}
+                onScoreSaved={(selectedIndex) => {
+                  const updated = handleKingOfHearts(
+                    scores,
+                    selectedIndex,
+                    currentChooserIndex,
+                    isStarRound
+                  );
+
+                  handleGameCompletion(
+                    fromStar ? "star" : "king", // ⚠️ très important
+                    updated
+                  );
+
+                  props.navigation.navigate("MainScreen");
+                }}
+              />
+            );
+          }}
         </Stack.Screen>
 
         <Stack.Screen name="LastFoldScreen">
@@ -223,10 +235,9 @@ export default function App() {
                   manualPoints,
                   currentChooserIndex
                 );
-                if (updated) {
-                  handleGameCompletion("generale", updated);
-                  props.navigation.navigate("MainScreen");
-                }
+
+                handleGameCompletion("generale", updated);
+                props.navigation.navigate("MainScreen");
               }}
             />
           )}
@@ -245,6 +256,17 @@ export default function App() {
                 handleGameCompletion("trix", updated);
                 props.navigation.navigate("MainScreen");
               }}
+            />
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="StarScreen">
+          {(props) => (
+            <StarScreen
+              {...props}
+              players={players}
+              currentChooserIndex={currentChooserIndex}
+              scores={scores}
+              handleGameCompletion={handleGameCompletion}
             />
           )}
         </Stack.Screen>

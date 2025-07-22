@@ -18,22 +18,16 @@ export default function FoldsScreen({ navigation, players, onScoreSaved }) {
   };
 
   const handleNext = () => {
-    const total = foldPoints.reduce((a, b) => a + b, 0);
-    if (total !== 80) {
-      alert("Total points must equal 80");
-      return;
-    }
+  const total = foldPoints.reduce((a, b) => a + b, 0);
+  if (total !== 80) {
+    alert("Total points must equal 80");
+    return;
+  }
 
-    const updated = [...foldPoints];
-    const indexWith80 = updated.findIndex((p) => p === 80);
-    const onlyOnePlayerHasPoints = updated.filter((p) => p > 0).length === 1;
+  // Envoie les plis tels quels (ex: [80, 0, 0, 0]) pour traitement dans handleFolds
+  onScoreSaved(foldPoints);
+};
 
-    if (indexWith80 !== -1 && onlyOnePlayerHasPoints) {
-      updated[indexWith80] = -100;
-    }
-
-    onScoreSaved(updated);
-  };
 
   return (
     <View style={styles.container}>
