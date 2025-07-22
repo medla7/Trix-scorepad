@@ -147,19 +147,21 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   actions: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: "auto",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 'auto',
   },
   actionButton: {
-    width: "48%",
+    width: '38%',
     padding: 16,
     borderRadius: RADIUS.lg,
-    alignItems: "center",
+    alignItems: 'center',
   },
   actionText: {
     color: COLORS.background,
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: 'bold',
+    color: "#FFA73C",
+    fontFamily: "JotiOne",
   },
 });

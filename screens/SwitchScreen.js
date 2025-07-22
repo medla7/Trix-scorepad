@@ -17,31 +17,31 @@ const games = [
   { name: "51", screen: "FiftyOneScreen" },
   { name: "Last Fold", screen: "LastFoldScreen" },
   { name: "General", screen: "GeneralScreen" },
+  { name: "Star", screen: "StarScreen" }, // On peut jouer Étoile depuis Switch
 ];
 
-export default function StarScreen({
-  navigation,
-  players,
-  currentChooserIndex,
-  scores,
-  handleGameCompletion,
-  route,
-}) {
+export default function SwitchScreen({ navigation }) {
   const handleSelectGame = (gameScreen) => {
-    navigation.navigate(gameScreen, {
+  if (gameScreen === "StarScreen") {
+    navigation.navigate("StarScreen", {
       isStarRound: true,
       fromStar: true,
-      fromSwitch: route.params?.fromSwitch || false,
+      fromSwitch: true, // <== très important
     });
-  };
+  } else {
+    navigation.navigate(gameScreen, {
+      fromSwitch: true,
+    });
+  }
+};
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Star</Text>
+      <Text style={styles.title}>Switch</Text>
 
       <Text style={styles.rules}>
-        NB: the chosen game will have 2× basepoints.{"\n"}
-        you have the option to switch hands card
+        NB: No special rule applies.{"\n"}
+        You can choose to play any game including Étoile.
       </Text>
 
       <View style={styles.grid}>
@@ -69,11 +69,11 @@ export default function StarScreen({
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: "#F2E9E4", // beige clair
+    backgroundColor: "#F2E9E4",
     padding: SPACING.md,
     alignItems: "center",
   },
-   title: {
+  title: {
     fontSize: 70,
     fontFamily: "JotiOne",
     color: COLORS.primary,
@@ -106,8 +106,6 @@ const styles = StyleSheet.create({
   gameText: {
     fontFamily: "JotiOne",
     fontSize: 16,
-     // proche de ton thème
-    
     textTransform: "lowercase",
   },
   cancelButton: {

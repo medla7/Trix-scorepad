@@ -134,11 +134,11 @@ const styles = StyleSheet.create({
   },
   actions: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     marginTop: 'auto',
   },
   actionButton: {
-    width: '48%',
+    width: '38%',
     padding: 16,
     borderRadius: RADIUS.lg,
     alignItems: 'center',
@@ -147,5 +147,7 @@ const styles = StyleSheet.create({
     color: COLORS.background,
     fontSize: 18,
     fontWeight: 'bold',
+    color: "#FFA73C",
+    fontFamily: "JotiOne",
   },
 });

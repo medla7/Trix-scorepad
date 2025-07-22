@@ -2,6 +2,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { COLORS, FONTS, RADIUS, SPACING } from "../styles/theme";
+import { JotiOne_400Regular } from "@expo-google-fonts/joti-one";
 
 export default function MainScreen({
   navigation,
@@ -14,27 +15,42 @@ export default function MainScreen({
   setCurrentChooserIndex,
 }) {
   const handleGamePress = (key) => {
-    if (key === "king") {
+  switch (key) {
+    case "king":
       navigation.navigate("KingOfHeartsScreen");
-    } else if (key === "last") {
+      break;
+    case "last":
       navigation.navigate("LastFoldScreen");
-    } else if (key === "51") {
+      break;
+    case "51":
       navigation.navigate("51Screen");
-    } else if (key === "queens") {
+      break;
+    case "queens":
       navigation.navigate("QueensScreen");
-    } else if (key === "dimands") {
+      break;
+    case "dimands":
       navigation.navigate("DimandsScreen");
-    } else if (key === "folds") {
+      break;
+    case "folds":
       navigation.navigate("FoldsScreen");
-    } else if (key === "general") {
+      break;
+    case "general":
       navigation.navigate("GeneraleScreen");
-    } else if (key === "trix") {
+      break;
+    case "trix":
       navigation.navigate("TrixScreen");
-    } else if (key === "star") {
+      break;
+    case "star":
       navigation.navigate("StarScreen");
-    }
-    // ... les autres jeux
-  };
+      break;
+    case "switch":
+      navigation.navigate("SwitchScreen");
+      break;
+    default:
+      console.warn(`Unknown game key: ${key}`);
+  }
+};
+
 
   return (
     <View style={styles.container}>
@@ -88,7 +104,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginVertical: 10,
   },
-  scoreTitle: { textAlign: "center", fontWeight: "bold", color: "#A85903" },
+  scoreTitle: { textAlign: "center", fontWeight: "bold", color: "#A85903" ,fontFamily:"JotiOne"},
   row: { flexDirection: "row", justifyContent: "space-around", marginTop: 10 },
   col: { alignItems: "center" },
   name: { fontWeight: "bold", fontSize: 14 },
@@ -104,14 +120,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   btn: {
-    width: "48%",
-    backgroundColor: "#E0E0E0",
-    padding: 12,
-    marginVertical: 6,
-    borderRadius: 12,
+    width: "47%",
+    backgroundColor: "#D9D9D9",
+    paddingVertical: 14,
+    borderRadius: RADIUS.md,
     alignItems: "center",
+    marginVertical:10,
   },
-  btnText: { fontSize: 16 },
+  btnText: { fontFamily: "JotiOne",
+    fontSize: 16,
+    textTransform: "lowercase",
+  },
   crossed: {
     textDecorationLine: "line-through",
     color: "#999",

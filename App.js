@@ -25,6 +25,7 @@ import { handleGenerale } from "./games/generale";
 import TrixScreen from "./screens/TrixScreen";
 import { handleTrix } from "./games/trix";
 import StarScreen from "./screens/StarScreen";
+import SwitchScreen from "./screens/SwitchScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -111,7 +112,7 @@ export default function App() {
           {(props) => {
             const isStarRound = props.route.params?.isStarRound || false;
             const fromStar = props.route.params?.fromStar || false;
-
+            const fromSwitch = props.route.params?.fromSwitch || false;
             return (
               <KingOfHeartsScreen
                 {...props}
@@ -124,10 +125,11 @@ export default function App() {
                     isStarRound
                   );
 
-                  handleGameCompletion(
-                    fromStar ? "star" : "king", // ⚠️ très important
-                    updated
-                  );
+                  let roundName = "king";
+                  if (fromSwitch) roundName = "switch";
+                  else if (fromStar) roundName = "star";
+
+                  handleGameCompletion(roundName, updated);
 
                   props.navigation.navigate("MainScreen");
                 }}
@@ -140,7 +142,7 @@ export default function App() {
           {(props) => {
             const isStarRound = props.route.params?.isStarRound || false;
             const fromStar = props.route.params?.fromStar || false;
-
+            const fromSwitch = props.route.params?.fromSwitch || false;
             return (
               <LastFoldScreen
                 {...props}
@@ -153,10 +155,11 @@ export default function App() {
                     isStarRound
                   );
 
-                  handleGameCompletion(
-                    fromStar ? "star" : "last", // ⚠️ très important
-                    updated
-                  );
+                  let roundName = "last";
+                  if (fromSwitch) roundName = "switch";
+                  else if (fromStar) roundName = "star";
+
+                  handleGameCompletion(roundName, updated);
 
                   props.navigation.navigate("MainScreen");
                 }}
@@ -166,10 +169,10 @@ export default function App() {
         </Stack.Screen>
 
         <Stack.Screen name="51Screen">
-         {(props) => {
+          {(props) => {
             const isStarRound = props.route.params?.isStarRound || false;
             const fromStar = props.route.params?.fromStar || false;
-
+            const fromSwitch = props.route.params?.fromSwitch || false;
             return (
               <FiftyOneScreen
                 {...props}
@@ -182,10 +185,11 @@ export default function App() {
                     isStarRound
                   );
 
-                  handleGameCompletion(
-                    fromStar ? "star" : "51", // ⚠️ très important
-                    updated
-                  );
+                  let roundName = "51";
+                  if (fromSwitch) roundName = "switch";
+                  else if (fromStar) roundName = "star";
+
+                  handleGameCompletion(roundName, updated);
 
                   props.navigation.navigate("MainScreen");
                 }}
@@ -198,7 +202,7 @@ export default function App() {
           {(props) => {
             const isStarRound = props.route.params?.isStarRound || false;
             const fromStar = props.route.params?.fromStar || false;
-
+            const fromSwitch = props.route.params?.fromSwitch || false;
             return (
               <QueensScreen
                 {...props}
@@ -211,11 +215,11 @@ export default function App() {
                     isStarRound
                   );
 
-                  handleGameCompletion(
-                    fromStar ? "star" : "queens", // ⚠️ très important
-                    updated
-                  );
+                  let roundName = "queens";
+                  if (fromSwitch) roundName = "switch";
+                  else if (fromStar) roundName = "star";
 
+                  handleGameCompletion(roundName, updated);
                   props.navigation.navigate("MainScreen");
                 }}
               />
@@ -227,7 +231,7 @@ export default function App() {
           {(props) => {
             const isStarRound = props.route.params?.isStarRound || false;
             const fromStar = props.route.params?.fromStar || false;
-
+            const fromSwitch = props.route.params?.fromSwitch || false;
             return (
               <DimandsScreen
                 {...props}
@@ -240,10 +244,11 @@ export default function App() {
                     isStarRound
                   );
 
-                  handleGameCompletion(
-                    fromStar ? "star" : "dimands", // ⚠️ très important
-                    updated
-                  );
+                  let roundName = "dimands";
+                  if (fromSwitch) roundName = "switch";
+                  else if (fromStar) roundName = "star";
+
+                  handleGameCompletion(roundName, updated);
 
                   props.navigation.navigate("MainScreen");
                 }}
@@ -255,7 +260,7 @@ export default function App() {
           {(props) => {
             const isStarRound = props.route.params?.isStarRound || false;
             const fromStar = props.route.params?.fromStar || false;
-
+            const fromSwitch = props.route.params?.fromSwitch || false;
             return (
               <FoldsScreen
                 {...props}
@@ -268,10 +273,11 @@ export default function App() {
                     isStarRound
                   );
 
-                  handleGameCompletion(
-                    fromStar ? "star" : "folds", // ⚠️ très important
-                    updated
-                  );
+                  let roundName = "folds";
+                  if (fromSwitch) roundName = "switch";
+                  else if (fromStar) roundName = "star";
+
+                  handleGameCompletion(roundName, updated);
 
                   props.navigation.navigate("MainScreen");
                 }}
@@ -283,7 +289,7 @@ export default function App() {
           {(props) => {
             const isStarRound = props.route.params?.isStarRound || false;
             const fromStar = props.route.params?.fromStar || false;
-
+            const fromSwitch = props.route.params?.fromSwitch || false;
             return (
               <GeneraleScreen
                 {...props}
@@ -296,10 +302,11 @@ export default function App() {
                     isStarRound
                   );
 
-                  handleGameCompletion(
-                    fromStar ? "star" : "general", // ⚠️ très important
-                    updated
-                  );
+                  let roundName = "general";
+                  if (fromSwitch) roundName = "switch";
+                  else if (fromStar) roundName = "star";
+
+                  handleGameCompletion(roundName, updated);
 
                   props.navigation.navigate("MainScreen");
                 }}
@@ -311,7 +318,7 @@ export default function App() {
           {(props) => {
             const isStarRound = props.route.params?.isStarRound || false;
             const fromStar = props.route.params?.fromStar || false;
-
+            const fromSwitch = props.route.params?.fromSwitch || false;
             return (
               <TrixScreen
                 {...props}
@@ -324,10 +331,11 @@ export default function App() {
                     isStarRound
                   );
 
-                  handleGameCompletion(
-                    fromStar ? "star" : "trix", // ⚠️ très important
-                    updated
-                  );
+                  let roundName = "trix";
+                  if (fromSwitch) roundName = "switch";
+                  else if (fromStar) roundName = "star";
+
+                  handleGameCompletion(roundName, updated);
 
                   props.navigation.navigate("MainScreen");
                 }}
@@ -338,6 +346,18 @@ export default function App() {
         <Stack.Screen name="StarScreen">
           {(props) => (
             <StarScreen
+              {...props}
+              players={players}
+              currentChooserIndex={currentChooserIndex}
+              scores={scores}
+              handleGameCompletion={handleGameCompletion}
+            />
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen name="SwitchScreen">
+          {(props) => (
+            <SwitchScreen
               {...props}
               players={players}
               currentChooserIndex={currentChooserIndex}
