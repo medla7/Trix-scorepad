@@ -137,127 +137,203 @@ export default function App() {
         </Stack.Screen>
 
         <Stack.Screen name="LastFoldScreen">
-          {(props) => (
-            <LastFoldScreen
-              {...props}
-              players={players}
-              onScoreSaved={(selectedPlayerIndex) => {
-                const updated = handleLastFold(
-                  scores,
-                  selectedPlayerIndex,
-                  currentChooserIndex
-                );
-                handleGameCompletion("last", updated);
-                props.navigation.navigate("MainScreen");
-              }}
-            />
-          )}
+          {(props) => {
+            const isStarRound = props.route.params?.isStarRound || false;
+            const fromStar = props.route.params?.fromStar || false;
+
+            return (
+              <LastFoldScreen
+                {...props}
+                players={players}
+                onScoreSaved={(selectedIndex) => {
+                  const updated = handleLastFold(
+                    scores,
+                    selectedIndex,
+                    currentChooserIndex,
+                    isStarRound
+                  );
+
+                  handleGameCompletion(
+                    fromStar ? "star" : "last", // ⚠️ très important
+                    updated
+                  );
+
+                  props.navigation.navigate("MainScreen");
+                }}
+              />
+            );
+          }}
         </Stack.Screen>
 
         <Stack.Screen name="51Screen">
-          {(props) => (
-            <FiftyOneScreen
-              {...props}
-              players={players}
-              onScoreSaved={(selectedPlayerIndex) => {
-                const updated = handle51(
-                  scores,
-                  selectedPlayerIndex,
-                  currentChooserIndex
-                );
-                handleGameCompletion("51", updated);
-                props.navigation.navigate("MainScreen");
-              }}
-            />
-          )}
+         {(props) => {
+            const isStarRound = props.route.params?.isStarRound || false;
+            const fromStar = props.route.params?.fromStar || false;
+
+            return (
+              <FiftyOneScreen
+                {...props}
+                players={players}
+                onScoreSaved={(selectedIndex) => {
+                  const updated = handle51(
+                    scores,
+                    selectedIndex,
+                    currentChooserIndex,
+                    isStarRound
+                  );
+
+                  handleGameCompletion(
+                    fromStar ? "star" : "51", // ⚠️ très important
+                    updated
+                  );
+
+                  props.navigation.navigate("MainScreen");
+                }}
+              />
+            );
+          }}
         </Stack.Screen>
 
         <Stack.Screen name="QueensScreen">
-          {(props) => (
-            <QueensScreen
-              {...props}
-              players={players}
-              onScoreSaved={(selectedIndexes) => {
-                const updated = handleQueens(
-                  scores,
-                  selectedIndexes,
-                  currentChooserIndex
-                );
-                handleGameCompletion("queens", updated);
-                props.navigation.navigate("MainScreen");
-              }}
-            />
-          )}
+          {(props) => {
+            const isStarRound = props.route.params?.isStarRound || false;
+            const fromStar = props.route.params?.fromStar || false;
+
+            return (
+              <QueensScreen
+                {...props}
+                players={players}
+                onScoreSaved={(selectedIndex) => {
+                  const updated = handleQueens(
+                    scores,
+                    selectedIndex,
+                    currentChooserIndex,
+                    isStarRound
+                  );
+
+                  handleGameCompletion(
+                    fromStar ? "star" : "queens", // ⚠️ très important
+                    updated
+                  );
+
+                  props.navigation.navigate("MainScreen");
+                }}
+              />
+            );
+          }}
         </Stack.Screen>
 
         <Stack.Screen name="DimandsScreen">
-          {(props) => (
-            <DimandsScreen
-              {...props}
-              players={players}
-              onScoreSaved={(selectedIndexes) => {
-                const updated = handleDimands(
-                  scores,
-                  selectedIndexes,
-                  currentChooserIndex
-                );
-                handleGameCompletion("dimands", updated);
-                props.navigation.navigate("MainScreen");
-              }}
-            />
-          )}
+          {(props) => {
+            const isStarRound = props.route.params?.isStarRound || false;
+            const fromStar = props.route.params?.fromStar || false;
+
+            return (
+              <DimandsScreen
+                {...props}
+                players={players}
+                onScoreSaved={(selectedIndex) => {
+                  const updated = handleDimands(
+                    scores,
+                    selectedIndex,
+                    currentChooserIndex,
+                    isStarRound
+                  );
+
+                  handleGameCompletion(
+                    fromStar ? "star" : "dimands", // ⚠️ très important
+                    updated
+                  );
+
+                  props.navigation.navigate("MainScreen");
+                }}
+              />
+            );
+          }}
         </Stack.Screen>
         <Stack.Screen name="FoldsScreen">
-          {(props) => (
-            <FoldsScreen
-              {...props}
-              players={players}
-              onScoreSaved={(foldPoints) => {
-                const updated = handleFolds(
-                  scores,
-                  foldPoints,
-                  currentChooserIndex
-                );
-                handleGameCompletion("folds", updated);
-                props.navigation.navigate("MainScreen");
-              }}
-            />
-          )}
+          {(props) => {
+            const isStarRound = props.route.params?.isStarRound || false;
+            const fromStar = props.route.params?.fromStar || false;
+
+            return (
+              <FoldsScreen
+                {...props}
+                players={players}
+                onScoreSaved={(selectedIndex) => {
+                  const updated = handleFolds(
+                    scores,
+                    selectedIndex,
+                    currentChooserIndex,
+                    isStarRound
+                  );
+
+                  handleGameCompletion(
+                    fromStar ? "star" : "folds", // ⚠️ très important
+                    updated
+                  );
+
+                  props.navigation.navigate("MainScreen");
+                }}
+              />
+            );
+          }}
         </Stack.Screen>
         <Stack.Screen name="GeneraleScreen">
-          {(props) => (
-            <GeneraleScreen
-              {...props}
-              players={players}
-              onScoreSaved={(manualPoints) => {
-                const updated = handleGenerale(
-                  scores,
-                  manualPoints,
-                  currentChooserIndex
-                );
+          {(props) => {
+            const isStarRound = props.route.params?.isStarRound || false;
+            const fromStar = props.route.params?.fromStar || false;
 
-                handleGameCompletion("generale", updated);
-                props.navigation.navigate("MainScreen");
-              }}
-            />
-          )}
+            return (
+              <GeneraleScreen
+                {...props}
+                players={players}
+                onScoreSaved={(selectedIndex) => {
+                  const updated = handleGenerale(
+                    scores,
+                    selectedIndex,
+                    currentChooserIndex,
+                    isStarRound
+                  );
+
+                  handleGameCompletion(
+                    fromStar ? "star" : "general", // ⚠️ très important
+                    updated
+                  );
+
+                  props.navigation.navigate("MainScreen");
+                }}
+              />
+            );
+          }}
         </Stack.Screen>
         <Stack.Screen name="TrixScreen">
-          {(props) => (
-            <TrixScreen
-              {...props}
-              players={players}
-              onScoreSaved={(selectedIndexes) => {
-                const updated = handleTrix(
-                  scores,
-                  selectedIndexes,
-                  currentChooserIndex
-                );
-                handleGameCompletion("trix", updated);
-                props.navigation.navigate("MainScreen");
-              }}
-            />
-          )}
+          {(props) => {
+            const isStarRound = props.route.params?.isStarRound || false;
+            const fromStar = props.route.params?.fromStar || false;
+
+            return (
+              <TrixScreen
+                {...props}
+                players={players}
+                onScoreSaved={(selectedIndex) => {
+                  const updated = handleTrix(
+                    scores,
+                    selectedIndex,
+                    currentChooserIndex,
+                    isStarRound
+                  );
+
+                  handleGameCompletion(
+                    fromStar ? "star" : "trix", // ⚠️ très important
+                    updated
+                  );
+
+                  props.navigation.navigate("MainScreen");
+                }}
+              />
+            );
+          }}
         </Stack.Screen>
         <Stack.Screen name="StarScreen">
           {(props) => (

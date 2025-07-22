@@ -1,9 +1,9 @@
 // games/folds.js
 import { applyMultiScoring } from "../logic/scoring";
 
-export function handleFolds(scores, foldPoints, chooserIndex) {
+export function handleFolds(scores, foldPoints, chooserIndex, isStarRound=false) {
   const totalFolds = foldPoints.reduce((a, b) => a + b, 0);
-  const basePoints = 10;
+  const basePoints = isStarRound ? 10 * 2 : 10;
 
   // Vérifier que la somme totale est bien 80
   if (totalFolds !== 80) {
@@ -18,7 +18,7 @@ export function handleFolds(scores, foldPoints, chooserIndex) {
   if (maxFolds === 80 && isOnlyOne) {
     const updated = [...scores];
     const index = foldPoints.findIndex((p) => p === 80);
-    updated[index] -= 100;
+    updated[index] -= 100*(isStarRound?2:1);
     return updated;
   }
 

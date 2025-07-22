@@ -1,4 +1,4 @@
-export function handleGenerale(currentScores, manualScores, chooserIndex) {
+export function handleGenerale(currentScores, manualScores, chooserIndex ,isStarRound=false) {
   const total = manualScores.reduce((a, b) => a + b, 0);
   if (total !== 440) {
     alert("Total score must be exactly 440");
@@ -11,7 +11,7 @@ export function handleGenerale(currentScores, manualScores, chooserIndex) {
   const updated = [...currentScores];
 
   if (onlyOneHasScore && indexWith440 !== -1) {
-    updated[indexWith440] += -440;
+    updated[indexWith440] += -440 * (isStarRound?2:1);
     return updated;
   }
 
@@ -19,7 +19,7 @@ export function handleGenerale(currentScores, manualScores, chooserIndex) {
   for (let i = 0; i < manualScores.length; i++) {
     const earned = manualScores[i];
     if (earned > 0) {
-      updated[i] += i === chooserIndex ? earned * 2 : earned;
+      updated[i] += (i === chooserIndex ? earned * 2 : earned)*(isStarRound?2:1);
     }
   }
 
