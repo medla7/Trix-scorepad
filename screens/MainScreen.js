@@ -2,7 +2,9 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { COLORS, FONTS, RADIUS, SPACING } from "../styles/theme";
-import { JotiOne_400Regular } from "@expo-google-fonts/joti-one";
+import { Snackbar } from "react-native-paper";
+import { useState, useEffect } from "react";
+import { useRoute } from "@react-navigation/native";
 
 export default function MainScreen({
   navigation,
@@ -14,43 +16,60 @@ export default function MainScreen({
   currentChooserIndex,
   setCurrentChooserIndex,
 }) {
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const route = useRoute();
+  const resetPlayers = route.params?.rps || [];
+  // 👉 écoute les changements dans scores
+  useEffect(() => {
+    //const resetPlayers = players.filter((_, i) => (scores[i]%1000 === 0) && (scores[i]!=0));
+    if (resetPlayers.length > 0) {
+      const msg = `${resetPlayers.join(", ")} ${
+        resetPlayers.length > 1
+          ? "their scores have been reset to 0"
+          : "his/her score has been reset to 0"
+      } `;
+      setSnackbarMessage(msg);
+      setSnackbarVisible(true);
+      route.params.rps = [];
+    }
+  }, [route.params?.rps]);
   const handleGamePress = (key) => {
-  switch (key) {
-    case "king":
-      navigation.navigate("KingOfHeartsScreen");
-      break;
-    case "last":
-      navigation.navigate("LastFoldScreen");
-      break;
-    case "51":
-      navigation.navigate("51Screen");
-      break;
-    case "queens":
-      navigation.navigate("QueensScreen");
-      break;
-    case "dimands":
-      navigation.navigate("DimandsScreen");
-      break;
-    case "folds":
-      navigation.navigate("FoldsScreen");
-      break;
-    case "general":
-      navigation.navigate("GeneraleScreen");
-      break;
-    case "trix":
-      navigation.navigate("TrixScreen");
-      break;
-    case "star":
-      navigation.navigate("StarScreen");
-      break;
-    case "switch":
-      navigation.navigate("SwitchScreen");
-      break;
-    default:
-      console.warn(`Unknown game key: ${key}`);
-  }
-};
-
+    switch (key) {
+      case "king":
+        navigation.navigate("KingOfHeartsScreen");
+        break;
+      case "last":
+        navigation.navigate("LastFoldScreen");
+        break;
+      case "51":
+        navigation.navigate("51Screen");
+        break;
+      case "queens":
+        navigation.navigate("QueensScreen");
+        break;
+      case "dimands":
+        navigation.navigate("DimandsScreen");
+        break;
+      case "folds":
+        navigation.navigate("FoldsScreen");
+        break;
+      case "general":
+        navigation.navigate("GeneraleScreen");
+        break;
+      case "trix":
+        navigation.navigate("TrixScreen");
+        break;
+      case "star":
+        navigation.navigate("StarScreen");
+        break;
+      case "switch":
+        navigation.navigate("SwitchScreen");
+        break;
+      default:
+        console.warn(`Unknown game key: ${key}`);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -85,6 +104,28 @@ export default function MainScreen({
           </TouchableOpacity>
         ))}
       </View>
+      <Snackbar
+        visible={snackbarVisible}
+        onDismiss={() => setSnackbarVisible(false)}
+        duration={4000}
+        style={{
+          backgroundColor: "#A85903", // or COLORS.primary if you use a theme
+          borderRadius: 12,
+          padding: 16,
+        }}
+        action={{
+          label: "OK",
+          onPress: () => setSnackbarVisible(false),
+          labelStyle: {
+            color: "white",
+            fontWeight: "bold",
+          },
+        }}
+      >
+        <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}>
+          {snackbarMessage}
+        </Text>
+      </Snackbar>
     </View>
   );
 }
@@ -104,7 +145,12 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginVertical: 10,
   },
-  scoreTitle: { textAlign: "center", fontWeight: "bold", color: "#A85903" ,fontFamily:"JotiOne"},
+  scoreTitle: {
+    textAlign: "center",
+    fontWeight: "bold",
+    color: "#A85903",
+    fontFamily: "JotiOne",
+  },
   row: { flexDirection: "row", justifyContent: "space-around", marginTop: 10 },
   col: { alignItems: "center" },
   name: { fontWeight: "bold", fontSize: 14 },
@@ -125,12 +171,9 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: RADIUS.md,
     alignItems: "center",
-    marginVertical:10,
+    marginVertical: 10,
   },
-  btnText: { fontFamily: "JotiOne",
-    fontSize: 16,
-    textTransform: "lowercase",
-  },
+  btnText: { fontFamily: "JotiOne", fontSize: 16, textTransform: "lowercase" },
   crossed: {
     textDecorationLine: "line-through",
     color: "#999",
