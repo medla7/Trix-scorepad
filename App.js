@@ -28,6 +28,19 @@ import StarScreen from "./screens/StarScreen";
 import SwitchScreen from "./screens/SwitchScreen";
 
 const Stack = createNativeStackNavigator();
+export const defaultGameList = [
+  { key: "king",    name: "king of hearts", played: false },
+  { key: "queens",  name: "queens",         played: false },
+  { key: "dimands", name: "dimands",        played: false },
+  { key: "folds",   name: "folds",          played: false },
+  { key: "last",    name: "last fold",      played: false },
+  { key: "trix",    name: "trix",           played: false },
+  { key: "51",      name: "51",             played: false },
+  { key: "general", name: "general",        played: false },
+  { key: "star",    name: "star",           played: false },
+  { key: "switch",  name: "switch",         played: false },
+];
+
 
 export default function App() {
   const [chooserGamesPlayed, setChooserGamesPlayed] = useState(0);
@@ -64,27 +77,54 @@ export default function App() {
   }
 
   const handleGameCompletion = (gameKey, updatedScores) => {
-    setScores(updatedScores);
-
-    const updatedGames = games.map((g) =>
-      g.key === gameKey ? { ...g, played: true } : g
-    );
-    setGames(updatedGames);
-
-    const result = updateGameFlow({
-      totalGamesPlayed,
-      chooserGamesPlayed,
-      currentChooserIndex,
-      playersLength: players.length,
-    });
-    setTotalGamesPlayed(result.newTotal);
-    setChooserGamesPlayed(result.newChooserCount);
-    setCurrentChooserIndex(result.nextChooserIndex);
-
-    if (result.gameOver) {
-      Alert.alert("Game Over", "All 40 games have been played!");
+  /* -------- reset des scores multiples de 1000 -------- */
+  const resetPlayers = [];
+  const adjustedScores = updatedScores.map((s, i) => {
+    if (s !== 0 && s % 1000 === 0) {
+      resetPlayers.push(players[i]);
+      return 0;
     }
-  };
+    return s;
+  });
+  if (resetPlayers.length) {
+    Alert.alert(
+      "Score reset !",
+      `${resetPlayers.join(", ")} ${resetPlayers.length > 1 ? "ont" : "a"} vu son score remis à 0`
+    );
+  }
+  setScores(adjustedScores);
+
+  /* -------- liste des jeux -------- */
+  const updatedGames = games.map((g) =>
+    g.key === gameKey ? { ...g, played: true } : g
+  );
+
+  const result = updateGameFlow({
+    totalGamesPlayed,
+    chooserGamesPlayed,
+    currentChooserIndex,
+    playersLength: players.length,
+  });
+
+  // si on passe au joueur suivant on ré‑initialise la liste,
+  // sinon on garde la liste dans laquelle le jeu courant vient d’être barré
+  if (result.shouldResetGames) {
+    setGames(defaultGameList);          // <- un seul setGames
+  } else {
+    setGames(updatedGames);             // <- un seul setGames
+  }
+
+  /* -------- compteurs & fin de partie -------- */
+  setTotalGamesPlayed(result.newTotal);
+  setChooserGamesPlayed(result.newChooserCount);
+  setCurrentChooserIndex(result.nextChooserIndex);
+
+  if (result.gameOver) {
+    Alert.alert("Game Over", "All 40 games have been played!");
+  }
+};
+
+
 
   return (
     <NavigationContainer>

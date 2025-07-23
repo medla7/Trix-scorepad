@@ -14,9 +14,9 @@ const games = [
   { name: "Diamonds", screen: "DimandsScreen" },
   { name: "Folds", screen: "FoldsScreen" },
   { name: "Trix", screen: "TrixScreen" },
-  { name: "51", screen: "FiftyOneScreen" },
+  { name: "51", screen: "51Screen" },
   { name: "Last Fold", screen: "LastFoldScreen" },
-  { name: "General", screen: "GeneralScreen" },
+  { name: "General", screen: "GeneraleScreen" },
   { name: "Star", screen: "StarScreen" }, // On peut jouer Étoile depuis Switch
 ];
 
