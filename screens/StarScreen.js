@@ -8,17 +8,6 @@ import {
 } from "react-native";
 import { COLORS, RADIUS, SPACING } from "../styles/theme";
 
-const games = [
-  { name: "King of Hearts", screen: "KingOfHeartsScreen" },
-  { name: "Queens", screen: "QueensScreen" },
-  { name: "Diamonds", screen: "DimandsScreen" },
-  { name: "Folds", screen: "FoldsScreen" },
-  { name: "Trix", screen: "TrixScreen" },
-  { name: "51", screen: "51Screen" },
-  { name: "Last Fold", screen: "LastFoldScreen" },
-  { name: "General", screen: "GeneraleScreen" },
-];
-
 export default function StarScreen({
   navigation,
   players,
@@ -26,9 +15,24 @@ export default function StarScreen({
   scores,
   handleGameCompletion,
   route,
+  games, // <-- receive games prop from App.js
 }) {
-  const handleSelectGame = (gameScreen) => {
-    navigation.navigate(gameScreen, {
+  // Map your screens to the game keys
+  const gameScreenMap = {
+    king: "KingOfHeartsScreen",
+    queens: "QueensScreen",
+    dimands: "DimandsScreen",
+    folds: "FoldsScreen",
+    trix: "TrixScreen",
+    "51": "51Screen",
+    last: "LastFoldScreen",
+    general: "GeneraleScreen",
+  };
+
+  const handleSelectGame = (gameKey) => {
+    const screen = gameScreenMap[gameKey];
+    if (!screen) return;
+    navigation.navigate(screen, {
       isStarRound: true,
       fromStar: true,
       fromSwitch: route.params?.fromSwitch || false,
@@ -40,20 +44,38 @@ export default function StarScreen({
       <Text style={styles.title}>Star</Text>
 
       <Text style={styles.rules}>
-        NB: the chosen game will have 2× basepoints.{"\n"}
-        you have the option to switch hands card
+        NB: 
+        the choosen game will have 2× basepoints.{"\n"}
+        you can only choose games who've been already played {"\n"}
+        you have the option to switch hands card with anyone(the others should change too)
       </Text>
 
       <View style={styles.grid}>
-        {games.map((game, index) => (
-          <TouchableOpacity
-            key={index}
-            style={styles.gameButton}
-            onPress={() => handleSelectGame(game.screen)}
-          >
-            <Text style={styles.gameText}>{game.name.toLowerCase()}</Text>
-          </TouchableOpacity>
-        ))}
+        {games
+          .filter((g) => g.key !== "star" && g.key !== "switch") // exclude star/switch
+          .map((game) => {
+            const isPlayed = game.played;
+            return (
+              <TouchableOpacity
+                key={game.key}
+                style={[
+                  styles.gameButton,
+                  !isPlayed && styles.disabled,
+                ]}
+                onPress={() => isPlayed && handleSelectGame(game.key)}
+                disabled={!isPlayed}
+              >
+                <Text
+                  style={[
+                    styles.gameText,
+                    !isPlayed && styles.crossed,
+                  ]}
+                >
+                  {game.name.toLowerCase()}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
       </View>
 
       <TouchableOpacity
@@ -69,11 +91,11 @@ export default function StarScreen({
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: "#F2E9E4", // beige clair
+    backgroundColor: "#F2E9E4",
     padding: SPACING.md,
     alignItems: "center",
   },
-   title: {
+  title: {
     fontSize: 70,
     fontFamily: "JotiOne",
     color: COLORS.primary,
@@ -102,13 +124,20 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: RADIUS.md,
     alignItems: "center",
+    marginVertical: 5,
   },
   gameText: {
     fontFamily: "JotiOne",
     fontSize: 16,
-     // proche de ton thème
-    
     textTransform: "lowercase",
+  },
+  crossed: {
+    textDecorationLine: "line-through",
+    color: "#999",
+    fontStyle: "italic",
+  },
+  disabled: {
+    opacity: 0.6,
   },
   cancelButton: {
     marginTop: 40,

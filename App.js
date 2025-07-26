@@ -1,5 +1,6 @@
 // App.js
-import React, { useState } from "react";
+
+import React, { useState, useEffect, useRef } from "react";
 import { View, Text, Alert } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -15,7 +16,7 @@ import { updateGameFlow } from "./logic/gameFlow";
 import FiftyOneScreen from "./screens/51Screen";
 import { handle51 } from "./games/51";
 import { handleQueens } from "./games/queens";
-import QueensScreen from "./screens/QueensScreen"; // à créer
+import QueensScreen from "./screens/QueensScreen";
 import DimandsScreen from "./screens/DimandsScreen";
 import { handleDimands } from "./games/dimands";
 import FoldsScreen from "./screens/FoldsScreen";
@@ -27,6 +28,7 @@ import { handleTrix } from "./games/trix";
 import StarScreen from "./screens/StarScreen";
 import SwitchScreen from "./screens/SwitchScreen";
 import { Provider as PaperProvider } from "react-native-paper";
+import { saveGameState, loadGameState } from "./logic/storage";
 
 const Stack = createNativeStackNavigator();
 export const defaultGameList = [
@@ -52,32 +54,38 @@ export default function App() {
 
   const [players, setPlayers] = useState([]);
   const [scores, setScores] = useState([0, 0, 0, 0]);
-  const [games, setGames] = useState([
-    { key: "king", name: "king of hearts", played: false },
-    { key: "queens", name: "queens", played: false },
-    { key: "dimands", name: "dimands", played: false },
-    { key: "folds", name: "folds", played: false },
-    { key: "last", name: "last fold", played: false },
-    { key: "trix", name: "trix", played: false },
-    { key: "51", name: "51", played: false },
-    { key: "general", name: "general", played: false },
-    { key: "star", name: "star", played: false },
-    { key: "switch", name: "switch", played: false },
-  ]);
+  const [games, setGames] = useState([...defaultGameList]);
   const [currentChooserIndex, setCurrentChooserIndex] = useState(
     Math.floor(Math.random() * 4)
   );
+  const [initialRoute, setInitialRoute] = useState("PlayerSetup");
 
-  if (!fontsLoaded) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Loading fonts...</Text>
-      </View>
-    );
-  }
+  // Navigation ref for programmatic navigation
+  const navigationRef = useRef();
+
+  // Load saved state on mount
+  useEffect(() => {
+    async function init() {
+      const saved = await loadGameState();
+      if (saved) {
+        setScores(saved.scores);
+        setGames(saved.games);
+        setCurrentChooserIndex(saved.currentChooserIndex);
+        setChooserGamesPlayed(saved.chooserGamesPlayed);
+        setTotalGamesPlayed(saved.totalGamesPlayed);
+        setPlayers(saved.players);
+        if (saved.players && saved.players.length > 0) {
+          setInitialRoute("MainScreen");
+        }
+      }
+    }
+    init();
+  }, []);
+
+  // Always render the same hooks in the same order!
 
   const handleGameCompletion = (gameKey, updatedScores) => {
-    /* -------- reset des scores multiples de 1000 -------- */
+    // Reset scores that are multiples of 1000
     const resetPlayers = [];
     const adjustedScores = updatedScores.map((s, i) => {
       if (s !== 0 && s % 1000 === 0) {
@@ -89,7 +97,7 @@ export default function App() {
 
     setScores(adjustedScores);
 
-    /* -------- liste des jeux -------- */
+    // Update games list
     const updatedGames = games.map((g) =>
       g.key === gameKey ? { ...g, played: true } : g
     );
@@ -101,15 +109,12 @@ export default function App() {
       playersLength: players.length,
     });
 
-    // si on passe au joueur suivant on ré‑initialise la liste,
-    // sinon on garde la liste dans laquelle le jeu courant vient d’être barré
     if (result.shouldResetGames) {
-      setGames(defaultGameList); // <- un seul setGames
+      setGames(defaultGameList);
     } else {
-      setGames(updatedGames); // <- un seul setGames
+      setGames(updatedGames);
     }
 
-    /* -------- compteurs & fin de partie -------- */
     setTotalGamesPlayed(result.newTotal);
     setChooserGamesPlayed(result.newChooserCount);
     setCurrentChooserIndex(result.nextChooserIndex);
@@ -117,13 +122,34 @@ export default function App() {
     if (result.gameOver) {
       Alert.alert("Game Over", "All 40 games have been played!");
     }
+
+    saveGameState({
+      scores: adjustedScores,
+      games: result.shouldResetGames ? defaultGameList : updatedGames,
+      currentChooserIndex: result.nextChooserIndex,
+      chooserGamesPlayed: result.newChooserCount,
+      totalGamesPlayed: result.newTotal,
+      players: players,
+    });
+
     return resetPlayers;
   };
 
+  if (!fontsLoaded) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Loading fonts...</Text>
+      </View>
+    );
+  }
+
   return (
     <PaperProvider>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <NavigationContainer ref={navigationRef}>
+        <Stack.Navigator
+          screenOptions={{ headerShown: false }}
+          initialRouteName={initialRoute}
+        >
           <Stack.Screen name="PlayerSetup">
             {(props) => (
               <PlayerSetupScreen {...props} setPlayers={setPlayers} />
@@ -161,11 +187,9 @@ export default function App() {
                       currentChooserIndex,
                       isStarRound
                     );
-
                     let roundName = "king";
                     if (fromSwitch) roundName = "switch";
                     else if (fromStar) roundName = "star";
-
                     const rps = handleGameCompletion(roundName, updated);
                     props.navigation.navigate("MainScreen", { rps });
                   }}
@@ -190,11 +214,9 @@ export default function App() {
                       currentChooserIndex,
                       isStarRound
                     );
-
                     let roundName = "last";
                     if (fromSwitch) roundName = "switch";
                     else if (fromStar) roundName = "star";
-
                     const rps = handleGameCompletion(roundName, updated);
                     props.navigation.navigate("MainScreen", { rps });
                   }}
@@ -219,11 +241,9 @@ export default function App() {
                       currentChooserIndex,
                       isStarRound
                     );
-
                     let roundName = "51";
                     if (fromSwitch) roundName = "switch";
                     else if (fromStar) roundName = "star";
-
                     const rps = handleGameCompletion(roundName, updated);
                     props.navigation.navigate("MainScreen", { rps });
                   }}
@@ -248,11 +268,9 @@ export default function App() {
                       currentChooserIndex,
                       isStarRound
                     );
-
                     let roundName = "queens";
                     if (fromSwitch) roundName = "switch";
                     else if (fromStar) roundName = "star";
-
                     const rps = handleGameCompletion(roundName, updated);
                     props.navigation.navigate("MainScreen", { rps });
                   }}
@@ -277,11 +295,9 @@ export default function App() {
                       currentChooserIndex,
                       isStarRound
                     );
-
                     let roundName = "dimands";
                     if (fromSwitch) roundName = "switch";
                     else if (fromStar) roundName = "star";
-
                     const rps = handleGameCompletion(roundName, updated);
                     props.navigation.navigate("MainScreen", { rps });
                   }}
@@ -289,6 +305,7 @@ export default function App() {
               );
             }}
           </Stack.Screen>
+
           <Stack.Screen name="FoldsScreen">
             {(props) => {
               const isStarRound = props.route.params?.isStarRound || false;
@@ -305,11 +322,9 @@ export default function App() {
                       currentChooserIndex,
                       isStarRound
                     );
-
                     let roundName = "folds";
                     if (fromSwitch) roundName = "switch";
                     else if (fromStar) roundName = "star";
-
                     const rps = handleGameCompletion(roundName, updated);
                     props.navigation.navigate("MainScreen", { rps });
                   }}
@@ -317,6 +332,7 @@ export default function App() {
               );
             }}
           </Stack.Screen>
+
           <Stack.Screen name="GeneraleScreen">
             {(props) => {
               const isStarRound = props.route.params?.isStarRound || false;
@@ -333,11 +349,9 @@ export default function App() {
                       currentChooserIndex,
                       isStarRound
                     );
-
                     let roundName = "general";
                     if (fromSwitch) roundName = "switch";
                     else if (fromStar) roundName = "star";
-
                     const rps = handleGameCompletion(roundName, updated);
                     props.navigation.navigate("MainScreen", { rps });
                   }}
@@ -345,6 +359,7 @@ export default function App() {
               );
             }}
           </Stack.Screen>
+
           <Stack.Screen name="TrixScreen">
             {(props) => {
               const isStarRound = props.route.params?.isStarRound || false;
@@ -361,11 +376,9 @@ export default function App() {
                       currentChooserIndex,
                       isStarRound
                     );
-
                     let roundName = "trix";
                     if (fromSwitch) roundName = "switch";
                     else if (fromStar) roundName = "star";
-
                     const rps = handleGameCompletion(roundName, updated);
                     props.navigation.navigate("MainScreen", { rps });
                   }}
@@ -373,6 +386,7 @@ export default function App() {
               );
             }}
           </Stack.Screen>
+
           <Stack.Screen name="StarScreen">
             {(props) => (
               <StarScreen
@@ -381,6 +395,7 @@ export default function App() {
                 currentChooserIndex={currentChooserIndex}
                 scores={scores}
                 handleGameCompletion={handleGameCompletion}
+                games={games}
               />
             )}
           </Stack.Screen>

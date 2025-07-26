@@ -48,7 +48,7 @@ export default function FiftyOneScreen({ navigation, players, onScoreSaved }) {
 
       <Text style={styles.rules}>
         NB: In 51, players accumulate card values aiming to avoid reaching 51.
-        The winner gets 510 points. If the chooser wins, they get double points.
+        The looser gets 510 points.
       </Text>
 
       <View style={styles.actions}>

@@ -41,7 +41,7 @@ export default function SwitchScreen({ navigation }) {
 
       <Text style={styles.rules}>
         NB: No special rule applies.{"\n"}
-        You can choose to play any game including Étoile.
+        You can choose to play any game including star.
       </Text>
 
       <View style={styles.grid}>

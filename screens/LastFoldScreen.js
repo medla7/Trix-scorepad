@@ -46,7 +46,7 @@ export default function LastFoldScreen({ navigation, players, onScoreSaved }) {
       </View>
 
       <Text style={styles.rules}>
-        NB: The player who wins the last fold receives 100 points.
+        NB: The player who gets the last fold receives 100 points.
       </Text>
 
       <View style={styles.actions}>

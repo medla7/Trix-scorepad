@@ -1,10 +1,18 @@
 // screens/MainScreen.js
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Button,
+  Alert,
+} from "react-native";
 import { COLORS, FONTS, RADIUS, SPACING } from "../styles/theme";
 import { Snackbar } from "react-native-paper";
 import { useState, useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function MainScreen({
   navigation,
@@ -70,7 +78,37 @@ export default function MainScreen({
         console.warn(`Unknown game key: ${key}`);
     }
   };
-
+  const handleReset = () => {
+    Alert.alert(
+      "Reset Game",
+      "Are you sure you want to reset the game? This cannot be undone.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Reset",
+          style: "destructive",
+          onPress: async () => {
+            await AsyncStorage.removeItem("game_state");
+            setScores([0, 0, 0, 0]);
+            setCurrentChooserIndex(Math.floor(Math.random() * players.length));
+            setGames([
+              { key: "king", name: "king of hearts", played: false },
+              { key: "queens", name: "queens", played: false },
+              { key: "dimands", name: "dimands", played: false },
+              { key: "folds", name: "folds", played: false },
+              { key: "last", name: "last fold", played: false },
+              { key: "trix", name: "trix", played: false },
+              { key: "51", name: "51", played: false },
+              { key: "general", name: "general", played: false },
+              { key: "star", name: "star", played: false },
+              { key: "switch", name: "switch", played: false },
+            ]);
+            Alert.alert("Game state cleared!");
+          },
+        },
+      ]
+    );
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.title}>TRIX</Text>
@@ -104,14 +142,39 @@ export default function MainScreen({
           </TouchableOpacity>
         ))}
       </View>
+      <View style={styles.bottomButtonRow}>
+  <TouchableOpacity style={styles.changeBtn} onPress={() => {
+    Alert.alert(
+      "Change Players",
+      "Are you sure you want to change players? This will start a new game.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Yes",
+          style: "destructive",
+          onPress: () => navigation.navigate("PlayerSetup"),
+        },
+      ]
+    );
+  }}>
+    <Text style={styles.changeBtnText}>Change Players</Text>
+  </TouchableOpacity>
+  <TouchableOpacity style={styles.resetBtn} onPress={handleReset}>
+    <Text style={styles.resetBtnText}>Reset Game</Text>
+  </TouchableOpacity>
+</View>
+
       <Snackbar
         visible={snackbarVisible}
         onDismiss={() => setSnackbarVisible(false)}
-        duration={4000}
+        duration={8000}
         style={{
           backgroundColor: "#A85903", // or COLORS.primary if you use a theme
           borderRadius: 12,
           padding: 16,
+          zIndex: 1000,
+          left: 20,
+          right: 20,
         }}
         action={{
           label: "OK",
@@ -180,4 +243,44 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
   },
   disabled: { opacity: 0.6 },
+
+  bottomButtonRow: {
+  position: "absolute",
+  bottom: 50,
+  left: "10%",
+  right: "10%",
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",
+  zIndex: 10,
+},
+changeBtn: {
+  backgroundColor: "#888",
+  borderRadius: 12,
+  paddingVertical: 14,
+  paddingHorizontal: 18,
+  alignItems: "center",
+  marginRight: 10,
+  minWidth: 100,
+},
+changeBtnText: {
+  color: "#fff",
+  fontSize: 12,
+  fontWeight: "bold",
+  fontFamily: "JotiOne",
+},
+resetBtn: {
+  backgroundColor: "#A85903",
+  borderRadius: 12,
+  paddingVertical: 14,
+  paddingHorizontal: 18,
+  alignItems: "center",
+  minWidth: 100,
+},
+resetBtnText: {
+  color: "#fff",
+  fontSize: 12,
+  fontWeight: "bold",
+  fontFamily: "JotiOne",
+},
 });

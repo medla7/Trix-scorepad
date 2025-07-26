@@ -70,7 +70,7 @@ export default function GeneraleScreen({ navigation, players, onScoreSaved }) {
       </View>
 
       <Text style={styles.rules}>
-        NB: For each point in generale the player gets manual score. Total must
+        NB: king of heart ,queens,dimands,folds and last fold are all applied. Total must
         be 440. If one player gets all, he receives -440. The chooser always
         receives double.
       </Text>
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   title: {
-    fontSize: 70,
+    fontSize: 60,
     fontFamily: "JotiOne",
     color: COLORS.primary,
     textAlign: "center",

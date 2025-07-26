@@ -37,6 +37,7 @@ export default function TrixScreen({ navigation, players, onScoreSaved }) {
       <Text style={styles.title}>trix</Text>
 
       <View style={styles.scoreBox}>
+        <Text style={styles.question}>Choose two winners</Text>
         <View style={styles.row}>
           {players.slice(0, 2).map((player, index) => {
             const idx = index;
@@ -129,6 +130,12 @@ const styles = StyleSheet.create({
     padding: SPACING.md,
     borderRadius: RADIUS.md,
     marginBottom: SPACING.md,
+  },
+  question: {
+    fontSize: FONTS.normal,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 10,
   },
   row: {
     flexDirection: "row",
