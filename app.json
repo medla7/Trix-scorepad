@@ -1,11 +1,10 @@
 {
   "expo": {
     "icon": "./assets/icon.png",
-    "name": "trix-scorepad",
-    "slug": "trix-scorepad",
+    "name": "trix scorepad",
+    "slug": "trix-game",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
@@ -14,7 +13,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.la7.trixgame",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {

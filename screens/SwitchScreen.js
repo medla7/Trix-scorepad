@@ -9,15 +9,15 @@ import {
 import { COLORS, RADIUS, SPACING } from "../styles/theme";
 
 const games = [
-  { name: "King of Hearts", screen: "KingOfHeartsScreen" },
-  { name: "Queens", screen: "QueensScreen" },
-  { name: "Diamonds", screen: "DimandsScreen" },
-  { name: "Folds", screen: "FoldsScreen" },
-  { name: "Trix", screen: "TrixScreen" },
+  { name: "ray el 7obb", screen: "KingOfHeartsScreen" },
+  { name: "dyem", screen: "QueensScreen" },
+  { name: "dinar", screen: "DimandsScreen" },
+  { name: "pliyet", screen: "FoldsScreen" },
+  { name: "solitaire", screen: "TrixScreen" },
   { name: "51", screen: "51Screen" },
-  { name: "Last Fold", screen: "LastFoldScreen" },
+  { name: "farcha", screen: "LastFoldScreen" },
   { name: "General", screen: "GeneraleScreen" },
-  { name: "Star", screen: "StarScreen" }, // On peut jouer Étoile depuis Switch
+  { name: "etoile", screen: "StarScreen" }, 
 ];
 
 export default function SwitchScreen({ navigation }) {

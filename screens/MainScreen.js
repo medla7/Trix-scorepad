@@ -23,6 +23,11 @@ export default function MainScreen({
   setGames,
   currentChooserIndex,
   setCurrentChooserIndex,
+  totalGamesPlayed,
+  setTotalGamesPlayed,
+  chooserGamesPlayed,
+  setChooserGamesPlayed,
+  undoLastGame,
 }) {
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -91,16 +96,18 @@ export default function MainScreen({
             await AsyncStorage.removeItem("game_state");
             setScores([0, 0, 0, 0]);
             setCurrentChooserIndex(Math.floor(Math.random() * players.length));
+            setTotalGamesPlayed(0);
+            setChooserGamesPlayed(0);
             setGames([
-              { key: "king", name: "king of hearts", played: false },
-              { key: "queens", name: "queens", played: false },
-              { key: "dimands", name: "dimands", played: false },
-              { key: "folds", name: "folds", played: false },
-              { key: "last", name: "last fold", played: false },
-              { key: "trix", name: "trix", played: false },
+              { key: "king", name: "ray el 7obb", played: false },
+              { key: "queens", name: "dyem", played: false },
+              { key: "dimands", name: "dinar", played: false },
+              { key: "folds", name: "pliyet", played: false },
+              { key: "last", name: "farcha", played: false },
+              { key: "trix", name: "solitaire", played: false },
               { key: "51", name: "51", played: false },
               { key: "general", name: "general", played: false },
-              { key: "star", name: "star", played: false },
+              { key: "star", name: "etoile", played: false },
               { key: "switch", name: "switch", played: false },
             ]);
             Alert.alert("Game state cleared!");
@@ -142,27 +149,51 @@ export default function MainScreen({
           </TouchableOpacity>
         ))}
       </View>
+
+      <TouchableOpacity
+        style={styles.undoBtn}
+        onPress={() => {
+          Alert.alert(
+            "Undo Last Game",
+            "Are you sure you want to undo the last game? This will revert scores and game state.",
+            [
+              { text: "Cancel", style: "cancel" },
+              {
+                text: "Undo",
+                style: "destructive",
+                onPress: undoLastGame,
+              },
+            ]
+          );
+        }}
+      >
+        <Text style={styles.undoBtnText}>Undo Last Game</Text>
+      </TouchableOpacity>
+
       <View style={styles.bottomButtonRow}>
-  <TouchableOpacity style={styles.changeBtn} onPress={() => {
-    Alert.alert(
-      "Change Players",
-      "Are you sure you want to change players? This will start a new game.",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Yes",
-          style: "destructive",
-          onPress: () => navigation.navigate("PlayerSetup"),
-        },
-      ]
-    );
-  }}>
-    <Text style={styles.changeBtnText}>Change Players</Text>
-  </TouchableOpacity>
-  <TouchableOpacity style={styles.resetBtn} onPress={handleReset}>
-    <Text style={styles.resetBtnText}>Reset Game</Text>
-  </TouchableOpacity>
-</View>
+        <TouchableOpacity
+          style={styles.changeBtn}
+          onPress={() => {
+            Alert.alert(
+              "Change Players",
+              "Are you sure you want to change players? This will start a new game.",
+              [
+                { text: "Cancel", style: "cancel" },
+                {
+                  text: "Yes",
+                  style: "destructive",
+                  onPress: () => navigation.navigate("PlayerSetup"),
+                },
+              ]
+            );
+          }}
+        >
+          <Text style={styles.changeBtnText}>Change Players</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.resetBtn} onPress={handleReset}>
+          <Text style={styles.resetBtnText}>Reset Game</Text>
+        </TouchableOpacity>
+      </View>
 
       <Snackbar
         visible={snackbarVisible}
@@ -245,42 +276,58 @@ const styles = StyleSheet.create({
   disabled: { opacity: 0.6 },
 
   bottomButtonRow: {
-  position: "absolute",
-  bottom: 50,
-  left: "10%",
-  right: "10%",
-  flexDirection: "row",
-  justifyContent: "space-between",
-  alignItems: "center",
-  zIndex: 10,
-},
-changeBtn: {
-  backgroundColor: "#888",
-  borderRadius: 12,
-  paddingVertical: 14,
-  paddingHorizontal: 18,
-  alignItems: "center",
-  marginRight: 10,
-  minWidth: 100,
-},
-changeBtnText: {
-  color: "#fff",
-  fontSize: 12,
-  fontWeight: "bold",
-  fontFamily: "JotiOne",
-},
-resetBtn: {
-  backgroundColor: "#A85903",
-  borderRadius: 12,
-  paddingVertical: 14,
-  paddingHorizontal: 18,
-  alignItems: "center",
-  minWidth: 100,
-},
-resetBtnText: {
-  color: "#fff",
-  fontSize: 12,
-  fontWeight: "bold",
-  fontFamily: "JotiOne",
-},
+    position: "absolute",
+    bottom: 50,
+    left: "10%",
+    right: "10%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    zIndex: 10,
+  },
+  changeBtn: {
+    backgroundColor: "#888",
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 18,
+    alignItems: "center",
+    marginRight: 10,
+    minWidth: 100,
+  },
+  changeBtnText: {
+    color: "#fff",
+    fontSize: 12,
+    fontWeight: "bold",
+    fontFamily: "JotiOne",
+  },
+  resetBtn: {
+    backgroundColor: "#A85903",
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 18,
+    alignItems: "center",
+    minWidth: 100,
+  },
+  resetBtnText: {
+    color: "#fff",
+    fontSize: 12,
+    fontWeight: "bold",
+    fontFamily: "JotiOne",
+  },
+  undoBtn: {
+    marginTop:20,
+    backgroundColor: "#d98b2cff",
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 18,
+    alignItems: "center",
+    marginBottom: 10,
+    minWidth: 100,
+  },
+  undoBtnText: {
+    color: "#fff",
+    fontSize: 12,
+    fontWeight: "bold",
+    fontFamily: "JotiOne",
+  },
 });

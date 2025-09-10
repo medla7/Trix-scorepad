@@ -32,22 +32,22 @@ import { saveGameState, loadGameState } from "./logic/storage";
 
 const Stack = createNativeStackNavigator();
 export const defaultGameList = [
-  { key: "king", name: "king of hearts", played: false },
-  { key: "queens", name: "queens", played: false },
-  { key: "dimands", name: "dimands", played: false },
-  { key: "folds", name: "folds", played: false },
-  { key: "last", name: "last fold", played: false },
-  { key: "trix", name: "trix", played: false },
+  { key: "king", name: "ray el 7obb", played: false },
+  { key: "queens", name: "dyem", played: false },
+  { key: "dimands", name: "dinar", played: false },
+  { key: "folds", name: "pliyet", played: false },
+  { key: "last", name: "farcha", played: false },
+  { key: "trix", name: "solitaire", played: false },
   { key: "51", name: "51", played: false },
   { key: "general", name: "general", played: false },
-  { key: "star", name: "star", played: false },
+  { key: "star", name: "etoile", played: false },
   { key: "switch", name: "switch", played: false },
 ];
 
 export default function App() {
   const [chooserGamesPlayed, setChooserGamesPlayed] = useState(0);
   const [totalGamesPlayed, setTotalGamesPlayed] = useState(0);
-
+  const [history, setHistory] = useState([]);
   const [fontsLoaded] = useFonts({
     JotiOne: JotiOne_400Regular,
   });
@@ -74,6 +74,7 @@ export default function App() {
         setChooserGamesPlayed(saved.chooserGamesPlayed);
         setTotalGamesPlayed(saved.totalGamesPlayed);
         setPlayers(saved.players);
+        setHistory(saved.history || []);
         if (saved.players && saved.players.length > 0) {
           setInitialRoute("MainScreen");
         }
@@ -85,6 +86,17 @@ export default function App() {
   // Always render the same hooks in the same order!
 
   const handleGameCompletion = (gameKey, updatedScores) => {
+    // Save current state to history before updating
+    setHistory((prev) => [
+      ...prev,
+      {
+        scores,
+        games,
+        currentChooserIndex,
+        chooserGamesPlayed,
+        totalGamesPlayed,
+      },
+    ]);
     // Reset scores that are multiples of 1000
     const resetPlayers = [];
     const adjustedScores = updatedScores.map((s, i) => {
@@ -130,9 +142,23 @@ export default function App() {
       chooserGamesPlayed: result.newChooserCount,
       totalGamesPlayed: result.newTotal,
       players: players,
+      history,
     });
 
     return resetPlayers;
+  };
+
+  const undoLastGame = () => {
+    setHistory((prev) => {
+      if (prev.length === 0) return prev;
+      const last = prev[prev.length - 1];
+      setScores(last.scores);
+      setGames(last.games);
+      setCurrentChooserIndex(last.currentChooserIndex);
+      setChooserGamesPlayed(last.chooserGamesPlayed);
+      setTotalGamesPlayed(last.totalGamesPlayed);
+      return prev.slice(0, -1);
+    });
   };
 
   if (!fontsLoaded) {
@@ -167,6 +193,11 @@ export default function App() {
                 setGames={setGames}
                 currentChooserIndex={currentChooserIndex}
                 setCurrentChooserIndex={setCurrentChooserIndex}
+                totalGamesPlayed={totalGamesPlayed}
+                setTotalGamesPlayed={setTotalGamesPlayed}
+                chooserGamesPlayed={chooserGamesPlayed}
+                setChooserGamesPlayed={setChooserGamesPlayed}
+                undoLastGame={undoLastGame} 
               />
             )}
           </Stack.Screen>
